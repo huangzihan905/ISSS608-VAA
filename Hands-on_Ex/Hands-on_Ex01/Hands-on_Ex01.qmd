@@ -26,3 +26,266 @@ ggplot(data = exam_data,
        aes(x = RACE)) +
   geom_bar()
 ```
+
+# Essential Grammatical Elements in ggplot2: Data
+
+```{r}
+ggplot(data = exam_data)
+```
+
+# Essential Grammatical Elements in ggplot2: Aesthetic mappings
+
+```{r}
+ggplot(data = exam_data,
+       aes(x = MATHS))
+```
+
+# Essential Grammatical Elements in ggplot2: geom
+
+## Geometric Objects: geom_bar
+
+```{r}
+ggplot(data = exam_data,
+       aes(x = MATHS)) +
+  geom_bar()
+```
+
+## Geometric Objects: geom_dotplot
+
+```{r}
+ggplot(data = exam_data,
+       aes(x = MATHS)) +
+  geom_dotplot(dotsize = 0.5)
+```
+
+```{r}
+ggplot(data = exam_data,
+       aes(x = MATHS)) +
+  geom_dotplot(binwidth = 2.5,
+               dotsize = 0.5) +
+  scale_y_continuous(NULL,
+                     breaks = NULL)
+```
+
+## Geometric Objects: geom_histogram
+
+```{r}
+ggplot(data = exam_data,
+       aes(x = MATHS)) +
+  geom_histogram()
+```
+
+```{r}
+ggplot(data = exam_data,
+       aes(x = MATHS)) +
+  geom_histogram(bins = 20,
+                 color = "white",
+                 fill = "light green")
+```
+
+```{r}
+ggplot(data = exam_data,
+       aes(x = MATHS,
+           fill = RACE)) +
+  geom_histogram(bins = 20,
+                 color = "grey30")
+```
+
+## Geometric Objects: geom-density
+
+```{r}
+ggplot(data = exam_data,
+       aes(x = MATHS)) +
+  geom_density()
+```
+
+```{r}
+ggplot(data = exam_data,
+       aes(x = MATHS,
+           color = RACE)) +
+  geom_density()
+```
+
+## Geometric Objects: geom_boxplot
+
+```{r}
+ggplot(data = exam_data,
+       aes(y = MATHS,
+           x = RACE)) +
+  geom_boxplot()
+```
+
+```{r}
+ggplot(data = exam_data,
+       aes(y = MATHS,
+           x = RACE)) +
+  geom_boxplot(notch = TRUE)
+```
+
+## Geometric Objects: geom_violin
+
+```{r}
+ggplot(data = exam_data,
+       aes(y = MATHS,
+           x = RACE)) +
+  geom_violin()
+```
+
+## Geometric Objects: geom_point
+
+```{r}
+ggplot(data = exam_data,
+       aes(x = MATHS,
+           y = ENGLISH)) +
+  geom_point()
+```
+
+## Geom Objects can be combined
+
+```{r}
+ggplot(data = exam_data,
+       aes(y = MATHS,
+           x = RACE)) +
+  geom_boxplot() +
+  geom_point(position = "jitter",
+             size = 1)
+```
+
+# Essential Grammatical Elements in ggplot2: stat
+
+## Adding mean value by using stat_summary() and overriding the default geom
+
+```{r}
+ggplot(data = exam_data,
+       aes(y = MATHS,
+           x = RACE)) +
+  geom_boxplot() +
+  stat_summary(geom = "point",
+               fun = "mean",
+               color = "light green",
+               size = 3)
+```
+
+## Adding mean value by using geom\_() and overriding the default stat
+
+```{r}
+ggplot(data = exam_data,
+       aes(y = MATHS,
+           x = RACE)) +
+  geom_boxplot() +
+  geom_point(stat = "summary",
+             fun = "mean",
+             color = "light pink",
+             size = 3)
+```
+
+## Best fit curve: geom_smooth()
+
+### Default method used is loess
+
+```{r}
+ggplot(data = exam_data,
+       aes(x = MATHS,
+           y = ENGLISH)) +
+  geom_point() +
+  geom_smooth(linewidth = 0.5)
+```
+
+### The default smoothing method can be overridden
+
+```{r}
+ggplot(data = exam_data,
+       aes(x = MATHS,
+           y = ENGLISH)) +
+  geom_point() +
+  geom_smooth(method = lm,
+              linewidth = 0.5)
+```
+
+# Essential Grammatical Elements in ggplot2: Facets
+
+## facet_wrap()
+
+```{r}
+ggplot(data = exam_data,
+       aes(x = MATHS)) +
+  geom_histogram(bins = 20) +
+    facet_wrap(~ RACE)
+```
+
+## facet_grid()
+
+```{r}
+ggplot(data = exam_data,
+       aes(x = MATHS)) +
+  geom_histogram(bins = 20) +
+    facet_grid(~ RACE)
+```
+
+# Essential Grammatical Elements in ggplot2: Coordinates
+
+## coord_flip(): to change the bar chart from vertical form to horizontal form
+
+```{r}
+ggplot(data = exam_data,
+       aes(x = RACE)) +
+  geom_bar() +
+  coord_flip()
+```
+
+## coord_cartesian(): to fix the axis range
+
+```{r}
+ggplot(data = exam_data,
+       aes(x = MATHS,
+           y = ENGLISH)) +
+  geom_point() +
+  geom_smooth(method = lm,
+              linewidth = 0.5) +
+  coord_cartesian(xlim = c (0,100),
+                  ylim = c (0,100))
+```
+
+# Essential Grammatical Elements in ggplot2: Themes
+
+theme() can be picked from the existing themes list, the followings are some examples.
+
+## theme_light()
+
+```{r}
+ggplot(data = exam_data,
+       aes(x = RACE)) +
+  geom_bar() +
+  coord_flip() +
+  theme_light()
+```
+
+## theme_classic()
+
+```{r}
+ggplot(data = exam_data,
+       aes(x = RACE)) +
+  geom_bar() +
+  coord_flip() +
+  theme_classic()
+```
+
+## theme_gray()
+
+```{r}
+ggplot(data = exam_data,
+       aes(x = RACE)) +
+  geom_bar() +
+  coord_flip() +
+  theme_gray()
+```
+
+## theme_minimal()
+
+```{r}
+ggplot(data = exam_data,
+       aes(x = RACE)) +
+  geom_bar() +
+  coord_flip() +
+  theme_minimal()
+```

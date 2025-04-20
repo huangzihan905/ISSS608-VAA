@@ -7,13 +7,6 @@
     "text": "About this site\n\n1 + 1\n\n[1] 2"
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "ISSS608-VAA-Huang Zihan",
-    "section": "",
-    "text": "Welcome to ISSS608 Visual Analytics and Application. In this website, you will find my coursework prepared for this course."
-  },
-  {
     "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html",
     "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html",
     "title": "Hands-on Exercise 1",
@@ -33,5 +26,145 @@
     "title": "Hands-on Exercise 1",
     "section": "",
     "text": "exam_data &lt;- read_csv(\"data/Exam_data.csv\")\n\nRows: 322 Columns: 7\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (4): ID, CLASS, GENDER, RACE\ndbl (3): ENGLISH, MATHS, SCIENCE\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#geometric-objects-geom_bar",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#geometric-objects-geom_bar",
+    "title": "Hands-on Exercise 1",
+    "section": "Geometric Objects: geom_bar",
+    "text": "Geometric Objects: geom_bar\n\nggplot(data = exam_data,\n       aes(x = MATHS)) +\n  geom_bar()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#geometric-objects-geom_dotplot",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#geometric-objects-geom_dotplot",
+    "title": "Hands-on Exercise 1",
+    "section": "Geometric Objects: geom_dotplot",
+    "text": "Geometric Objects: geom_dotplot\n\nggplot(data = exam_data,\n       aes(x = MATHS)) +\n  geom_dotplot(dotsize = 0.5)\n\nBin width defaults to 1/30 of the range of the data. Pick better value with\n`binwidth`.\n\n\n\n\n\n\n\n\n\n\nggplot(data = exam_data,\n       aes(x = MATHS)) +\n  geom_dotplot(binwidth = 2.5,\n               dotsize = 0.5) +\n  scale_y_continuous(NULL,\n                     breaks = NULL)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#geometric-objects-geom_histogram",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#geometric-objects-geom_histogram",
+    "title": "Hands-on Exercise 1",
+    "section": "Geometric Objects: geom_histogram",
+    "text": "Geometric Objects: geom_histogram\n\nggplot(data = exam_data,\n       aes(x = MATHS)) +\n  geom_histogram()\n\n`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.\n\n\n\n\n\n\n\n\n\n\nggplot(data = exam_data,\n       aes(x = MATHS)) +\n  geom_histogram(bins = 20,\n                 color = \"white\",\n                 fill = \"light green\")\n\n\n\n\n\n\n\n\n\nggplot(data = exam_data,\n       aes(x = MATHS,\n           fill = RACE)) +\n  geom_histogram(bins = 20,\n                 color = \"grey30\")"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#geometric-objects-geom-density",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#geometric-objects-geom-density",
+    "title": "Hands-on Exercise 1",
+    "section": "Geometric Objects: geom-density",
+    "text": "Geometric Objects: geom-density\n\nggplot(data = exam_data,\n       aes(x = MATHS)) +\n  geom_density()\n\n\n\n\n\n\n\n\n\nggplot(data = exam_data,\n       aes(x = MATHS,\n           color = RACE)) +\n  geom_density()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#geometric-objects-geom_boxplot",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#geometric-objects-geom_boxplot",
+    "title": "Hands-on Exercise 1",
+    "section": "Geometric Objects: geom_boxplot",
+    "text": "Geometric Objects: geom_boxplot\n\nggplot(data = exam_data,\n       aes(y = MATHS,\n           x = RACE)) +\n  geom_boxplot()\n\n\n\n\n\n\n\n\n\nggplot(data = exam_data,\n       aes(y = MATHS,\n           x = RACE)) +\n  geom_boxplot(notch = TRUE)\n\nNotch went outside hinges\nℹ Do you want `notch = FALSE`?\nNotch went outside hinges\nℹ Do you want `notch = FALSE`?"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#geometric-objects-geom_violin",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#geometric-objects-geom_violin",
+    "title": "Hands-on Exercise 1",
+    "section": "Geometric Objects: geom_violin",
+    "text": "Geometric Objects: geom_violin\n\nggplot(data = exam_data,\n       aes(y = MATHS,\n           x = RACE)) +\n  geom_violin()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#geometric-objects-geom_point",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#geometric-objects-geom_point",
+    "title": "Hands-on Exercise 1",
+    "section": "Geometric Objects: geom_point",
+    "text": "Geometric Objects: geom_point\n\nggplot(data = exam_data,\n       aes(x = MATHS,\n           y = ENGLISH)) +\n  geom_point()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#geom-objects-can-be-combined",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#geom-objects-can-be-combined",
+    "title": "Hands-on Exercise 1",
+    "section": "Geom Objects can be combined",
+    "text": "Geom Objects can be combined\n\nggplot(data = exam_data,\n       aes(y = MATHS,\n           x = RACE)) +\n  geom_boxplot() +\n  geom_point(position = \"jitter\",\n             size = 1)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#adding-mean-value-by-using-stat_summary-and-overriding-the-default-geom",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#adding-mean-value-by-using-stat_summary-and-overriding-the-default-geom",
+    "title": "Hands-on Exercise 1",
+    "section": "Adding mean value by using stat_summary() and overriding the default geom",
+    "text": "Adding mean value by using stat_summary() and overriding the default geom\n\nggplot(data = exam_data,\n       aes(y = MATHS,\n           x = RACE)) +\n  geom_boxplot() +\n  stat_summary(geom = \"point\",\n               fun = \"mean\",\n               color = \"light green\",\n               size = 3)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#adding-mean-value-by-using-geom_-and-overriding-the-default-stat",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#adding-mean-value-by-using-geom_-and-overriding-the-default-stat",
+    "title": "Hands-on Exercise 1",
+    "section": "Adding mean value by using geom_() and overriding the default stat",
+    "text": "Adding mean value by using geom_() and overriding the default stat\n\nggplot(data = exam_data,\n       aes(y = MATHS,\n           x = RACE)) +\n  geom_boxplot() +\n  geom_point(stat = \"summary\",\n             fun = \"mean\",\n             color = \"light pink\",\n             size = 3)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#best-fit-curve-geom_smooth",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#best-fit-curve-geom_smooth",
+    "title": "Hands-on Exercise 1",
+    "section": "Best fit curve: geom_smooth()",
+    "text": "Best fit curve: geom_smooth()\n\nDefault method used is loess\n\nggplot(data = exam_data,\n       aes(x = MATHS,\n           y = ENGLISH)) +\n  geom_point() +\n  geom_smooth(linewidth = 0.5)\n\n`geom_smooth()` using method = 'loess' and formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\n\n\nThe default smoothing method can be overridden\n\nggplot(data = exam_data,\n       aes(x = MATHS,\n           y = ENGLISH)) +\n  geom_point() +\n  geom_smooth(method = lm,\n              linewidth = 0.5)\n\n`geom_smooth()` using formula = 'y ~ x'"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#facet_wrap",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#facet_wrap",
+    "title": "Hands-on Exercise 1",
+    "section": "facet_wrap()",
+    "text": "facet_wrap()\n\nggplot(data = exam_data,\n       aes(x = MATHS)) +\n  geom_histogram(bins = 20) +\n    facet_wrap(~ RACE)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#facet_grid",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#facet_grid",
+    "title": "Hands-on Exercise 1",
+    "section": "facet_grid()",
+    "text": "facet_grid()\n\nggplot(data = exam_data,\n       aes(x = MATHS)) +\n  geom_histogram(bins = 20) +\n    facet_grid(~ RACE)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#coord_flip-to-change-the-bar-chart-from-vertical-form-to-horizontal-form",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#coord_flip-to-change-the-bar-chart-from-vertical-form-to-horizontal-form",
+    "title": "Hands-on Exercise 1",
+    "section": "coord_flip(): to change the bar chart from vertical form to horizontal form",
+    "text": "coord_flip(): to change the bar chart from vertical form to horizontal form\n\nggplot(data = exam_data,\n       aes(x = RACE)) +\n  geom_bar() +\n  coord_flip()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#coord_cartesian-to-fix-the-axis-range",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#coord_cartesian-to-fix-the-axis-range",
+    "title": "Hands-on Exercise 1",
+    "section": "coord_cartesian(): to fix the axis range",
+    "text": "coord_cartesian(): to fix the axis range\n\nggplot(data = exam_data,\n       aes(x = MATHS,\n           y = ENGLISH)) +\n  geom_point() +\n  geom_smooth(method = lm,\n              linewidth = 0.5) +\n  coord_cartesian(xlim = c (0,100),\n                  ylim = c (0,100))\n\n`geom_smooth()` using formula = 'y ~ x'"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#theme_light",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#theme_light",
+    "title": "Hands-on Exercise 1",
+    "section": "theme_light()",
+    "text": "theme_light()\n\nggplot(data = exam_data,\n       aes(x = RACE)) +\n  geom_bar() +\n  coord_flip() +\n  theme_light()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#theme_classic",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#theme_classic",
+    "title": "Hands-on Exercise 1",
+    "section": "theme_classic()",
+    "text": "theme_classic()\n\nggplot(data = exam_data,\n       aes(x = RACE)) +\n  geom_bar() +\n  coord_flip() +\n  theme_classic()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#theme_gray",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#theme_gray",
+    "title": "Hands-on Exercise 1",
+    "section": "theme_gray()",
+    "text": "theme_gray()\n\nggplot(data = exam_data,\n       aes(x = RACE)) +\n  geom_bar() +\n  coord_flip() +\n  theme_gray()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#theme_minimal",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#theme_minimal",
+    "title": "Hands-on Exercise 1",
+    "section": "theme_minimal()",
+    "text": "theme_minimal()\n\nggplot(data = exam_data,\n       aes(x = RACE)) +\n  geom_bar() +\n  coord_flip() +\n  theme_minimal()"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "ISSS608-VAA-Huang Zihan",
+    "section": "",
+    "text": "Welcome to ISSS608 Visual Analytics and Application. In this website, you will find my coursework prepared for this course."
   }
 ]
