@@ -1,0 +1,183 @@
+---
+title: "Hands-on_Ex02"
+author: "Huang Zihan"
+---
+
+# Beyond ggplot2 Fundamentals
+
+## 1. Data Preparation
+
+### Installing and loading the required libraries
+
+```{r}
+pacman::p_load(ggrepel,
+               ggthemes,
+               hrbrthemes,
+               patchwork,
+               tidyverse)
+```
+
+### Importing Data
+
+```{r}
+exam_data<-read_csv("Exam_data.csv")
+```
+
+## 2. ggrepel: to repel overlapping text
+
+### without ggrepel
+
+```{r}
+ggplot(data=exam_data,
+       aes(x=MATHS,
+           y=ENGLISH))+
+  geom_point()+
+  geom_smooth(method = lm,
+              linewidth=0.5)+
+  geom_label(aes(label=ID),
+             hjust=.5,
+             vjust=-.5)+
+  coord_cartesian(xlim = c(0,100),
+                  ylim = c(0,100))+
+  ggtitle("English scores versus Maths scores for primary 3")
+```
+
+### with ggrepel
+
+#### geom_label_repel: add a text box background
+```{r}
+ggplot(data=exam_data,
+       aes(x=MATHS,
+           y=ENGLISH))+
+  geom_point()+
+  geom_smooth(method = lm,
+              linewidth=0.5)+
+  geom_label_repel(aes(label = ID),
+                   fontface = "bold")+
+  coord_cartesian(xlim = c(0,100),
+                  ylim = c(0,100))+
+  ggtitle("English scores versus Maths scores for primary 3")
+```
+
+#### geom_text_repel: display plain text
+```{r}
+ggplot(data=exam_data,
+       aes(x=MATHS,
+           y=ENGLISH))+
+  geom_point()+
+  geom_smooth(method = lm,
+              linewidth=0.5)+
+  geom_text_repel(aes(label = ID),
+                   fontface = "bold",
+                  size = 3.5,
+                  color = "blue")+
+  coord_cartesian(xlim = c(0,100),
+                  ylim = c(0,100))+
+  ggtitle("English scores versus Maths scores for primary 3")
+```
+
+## 3. ggthemes
+
+```{r}
+ggplot(data = exam_data,
+       aes(x = MATHS)) +
+  geom_histogram(bins = 20,
+                 boundary = 100,
+                 color = "white",
+                 fill = "grey")+
+  ggtitle("Distribution of Maths scores")+
+  theme_wsj()+
+  theme(plot.title = element_text(size = 20))
+```
+
+## 4. hrbrthemes
+
+```{r}
+ggplot(data = exam_data,
+       aes(x = MATHS)) +
+  geom_histogram(bins = 20,
+                 boundary = 100,
+                 color = "white",
+                 fill = "grey")+
+  ggtitle("Distribution of Maths scores")+
+  theme_ipsum(axis_title_size = 15,
+              base_size = 15,
+              grid = "N")
+```
+## 5. pathwork: to combine single graphs
+
+### Create single graphs
+
+```{r}
+p1<-ggplot(data = exam_data,
+           aes(x=MATHS))+
+  geom_histogram(bins=20,
+                 boundary=100,
+                 color="grey25",
+                 fill="grey90")+
+  coord_cartesian(xlim=c(0,100))+
+  ggtitle("Distribution of Maths Scores")
+p1
+```
+
+```{r}
+p2<-ggplot(data = exam_data,
+           aes(x=ENGLISH))+
+  geom_histogram(bins=20,
+                 boundary=100,
+                 color="grey25",
+                 fill="grey90")+
+  coord_cartesian(xlim=c(0,100))+
+  ggtitle("Distribution of English Scores")
+p2
+```
+
+```{r}
+p3<-ggplot(data = exam_data,
+           aes(x=MATHS,
+               y=ENGLISH))+
+  geom_point()+
+  geom_smooth(method=lm,
+              size=0.5)+
+  coord_cartesian(xlim = c(0,100),
+                  ylim = c(0,100))+
+  ggtitle("English scores versus Maths scores for Primary 3")
+p3
+```
+
+### Combine MATHS histogram & ENGLISH histogram
+
+```{r}
+p1+p2
+```
+
+### Combine 3 graphs
+
+1. “/” operator to stack two ggplot2 graphs
+2. “|” operator to place the plots beside each other
+3. “()” operator the define the sequence of the plotting
+
+```{r}
+(p1 / p2) | p3
+```
+
+#### plot_annotation(): auto-tagging
+```{r}
+((p1 / p2) | p3) + 
+  plot_annotation(tag_levels = 'I')
+```
+
+#### inset_element(): insert p2 to p3
+```{r}
+p3 + inset_element(p2, 
+                   left = 0.02, 
+                   bottom = 0.7, 
+                   right = 0.5, 
+                   top = 1)
+```
+
+#### patchwork & ggtheme
+```{r}
+patchwork <- (p1 / p2) | p3
+patchwork & theme_wsj()+theme(plot.title = element_text(size = 6))
+```
