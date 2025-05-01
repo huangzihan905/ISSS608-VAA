@@ -11,6 +11,8 @@ execute:
   warning: false
 ---
 
+# 3 Programming Interactive Data Visualisation with R
+
 # 3.1 Getting Started
 
 ## 1. Loading packages
@@ -43,7 +45,8 @@ Tooltip's function is to **display the information** when the mouse is over elem
 
 ```{r}
 p <- ggplot(data=exam_data, aes(x = MATHS)) +
-  geom_dotplot_interactive(aes(tooltip = ID), stackgroups = TRUE, binwidth = 1, method = "histodot") +
+  geom_dotplot_interactive(aes(tooltip = ID), stackgroups = TRUE, 
+                           binwidth = 1, method = "histodot") +
   scale_y_continuous(NULL, breaks = NULL)
 
 girafe(ggobj = p, width_svg = 6, height_svg = 6*0.618)
@@ -57,7 +60,9 @@ exam_data$tooltip <- paste0("Name = ", exam_data$ID,"\n CLASS = ", exam_data$CLA
 # paste0(): to concatenate strings
 
 p <- ggplot(data=exam_data, aes(x = MATHS)) +
-  geom_dotplot_interactive(aes(tooltip = exam_data$tooltip), stackgroups = TRUE, binwidth = 1, method = "histodot") +
+  geom_dotplot_interactive(aes(tooltip = exam_data$tooltip),
+                           stackgroups = TRUE, binwidth = 1, 
+                           method = "histodot") +
   scale_y_continuous(NULL, breaks = NULL)
 
 girafe(ggobj = p, width_svg = 6, height_svg = 6*0.618)

@@ -161,32 +161,67 @@
     "text": "theme_minimal()\n\nggplot(data = exam_data,\n       aes(x = RACE)) +\n  geom_bar() +\n  coord_flip() +\n  theme_minimal()"
   },
   {
-    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html",
-    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html",
-    "title": "Hands-on Exercise 3-1",
-    "section": "",
-    "text": "Packages Introduction\n\nggiraph: to make ggplot graphics interactive\nplotly: to plot interactive statistical graphs\nDT: to provide an R interface to the JavaScript library DataTables to create interactive table on html page\ntidyverse: a family of modern R packages specially designed to support data science, analysis and communication task\npatchwork: to combine multiple ggplot2 graphs into one figure\n\n\npacman::p_load(ggiraph, plotly, patchwork, DT, tidyverse) \n\n\n\n\n\nexam_data&lt;-read_csv(\"Exam_data.csv\")"
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#loading-the-r-packages",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#loading-the-r-packages",
+    "title": "Hands-on_Ex03_2",
+    "section": "1. Loading the R packages",
+    "text": "1. Loading the R packages\n\nplotly: R library for plotting interactive statistical graphs.\ngganimate: An ggplot extension for creating animated statistical graphs.\ngifski: To convert video frames to GIF animations.\ngapminder: An excerpt of the data available at Gapminder.org. We just want to use its country_colors scheme.\ntidyverse: A family of modern R packages specially designed to support data science, analysis and communication task.\nreadxl: An R package used to read .xls and .xlsx into R.\n\n\npacman::p_load(plotly, gganimate, gifski, gapminder, tidyverse, readxl)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#importing-the-data",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#importing-the-data",
+    "title": "Hands-on_Ex03_2",
+    "section": "2. Importing the data",
+    "text": "2. Importing the data\n\ncol &lt;- c(\"Country\", \"Continent\")\n# to create a character vector containing the values \"Country\", \"Continent\"\n\nglobalPop &lt;- read_xls(\"GlobalPopulation.xls\", sheet=\"Data\") %&gt;%\n# %&gt;% is the pipe operator in R, it passes the result of one function into the next\n  \n  mutate(across(all_of(col), as.factor)) %&gt;%\n  # mutate(): to add or change columns in a data frame\n  # across(col, as.factor): to convert the col to factor type\n  # mutate_at() also can be used here\n  \n  mutate(Year = as.integer(Year))\n  # convert year to integer"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#building-a-static-poplulation-bubble-plot",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#building-a-static-poplulation-bubble-plot",
+    "title": "Hands-on_Ex03_2",
+    "section": "1. Building a static poplulation bubble plot",
+    "text": "1. Building a static poplulation bubble plot\n\nggplot(globalPop, aes(x = Old, y = Young, size = Population, colour = Country)) +\n  geom_point(alpha = 0.7, show.legend = FALSE) +\n  scale_colour_manual(values = country_colors) +\n  scale_size(range = c(2, 12)) +\n  labs(title = 'Year: {frame_time}', x = '% Aged', y = '% Young')"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#building-the-animated-bubble-plot",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#building-the-animated-bubble-plot",
+    "title": "Hands-on_Ex03_2",
+    "section": "2. Building the animated bubble plot",
+    "text": "2. Building the animated bubble plot\n\ntransition_time() is used to create transition through distinct states in time (i.e. Year)\nease_aes() is used to control easing of aesthetics. The default is linear. Other methods are as the following:\n\nquadratic\ncubic\nquartic\nquintic\nsine\ncircular\nexponential\nelastic\nback\nbounce\n\nview_*(): to control the panel behavior\nshadow_*(): to keep traces of previous or future frames\nenter_*()/exit_*() : to define how elements appear and disappear\n\n\nggplot(globalPop, aes(x = Old, y = Young, size = Population, colour = Country)) +\n  geom_point(alpha = 0.7, show.legend = FALSE) +\n  scale_colour_manual(values = country_colors) +\n  scale_size(range = c(2, 12)) +\n  labs(title = 'Year: {frame_time}', x = '% Aged', y = '% Young') +\n  \n  transition_time(Year) +       \n  ease_aes('linear') + \n  view_follow(fixed_y = TRUE) + \n  # follow the data horizontally\n  shadow_mark(past = TRUE, future = FALSE, alpha = 0.2) +\n  # keep traces of previous frames\n  enter_fade() + exit_shrink()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#building-an-animated-bubble-plot-ggploy",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#building-an-animated-bubble-plot-ggploy",
+    "title": "Hands-on_Ex03_2",
+    "section": "1. Building an animated bubble plot: ggploy()",
+    "text": "1. Building an animated bubble plot: ggploy()\n“show.legend = FALSE” doesn’t work here, so here needs to use “theme(legend.position=‘none’)”\n\ngg &lt;- ggplot(globalPop, aes(x = Old, y = Young, size = Population,\n                            colour = Country)) +\n  geom_point(aes(size = Population, frame = Year), alpha = 0.7,\n             show.legend = FALSE) +\n  scale_colour_manual(values = country_colors) +\n  scale_size(range = c(2, 12)) +\n  labs(x = '% Aged', y = '% Young') + \n  theme(legend.position='none')\n\nggplotly(gg)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#building-an-animated-bubble-plot-plot_ly",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#building-an-animated-bubble-plot-plot_ly",
+    "title": "Hands-on_Ex03_2",
+    "section": "2. Building an animated bubble plot: plot_ly()",
+    "text": "2. Building an animated bubble plot: plot_ly()\n\nbp &lt;- globalPop %&gt;%\n  \n  plot_ly(x = ~Old, y = ~Young, size = ~Population, color = ~Continent,\n          sizes = c(2, 100), frame = ~Year, text = ~Country, hoverinfo = \"text\",\n          type = 'scatter', mode = 'markers') %&gt;%\n  \n  layout(showlegend = FALSE)\n\nbp"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#loading-packages",
     "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#loading-packages",
     "title": "Hands-on Exercise 3-1",
-    "section": "",
-    "text": "Packages Introduction\n\nggiraph: to make ggplot graphics interactive\nplotly: to plot interactive statistical graphs\nDT: to provide an R interface to the JavaScript library DataTables to create interactive table on html page\ntidyverse: a family of modern R packages specially designed to support data science, analysis and communication task\npatchwork: to combine multiple ggplot2 graphs into one figure\n\n\npacman::p_load(ggiraph, plotly, patchwork, DT, tidyverse)"
+    "section": "1. Loading packages",
+    "text": "1. Loading packages\nPackages Introduction\n\nggiraph: to make ggplot graphics interactive\nplotly: to plot interactive statistical graphs\nDT: to provide an R interface to the JavaScript library DataTables to create interactive table on html page\ntidyverse: a family of modern R packages specially designed to support data science, analysis and communication task\npatchwork: to combine multiple ggplot2 graphs into one figure\n\n\npacman::p_load(ggiraph, plotly, patchwork, DT, tidyverse)"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#importing-data",
     "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#importing-data",
     "title": "Hands-on Exercise 3-1",
-    "section": "",
-    "text": "exam_data&lt;-read_csv(\"Exam_data.csv\")"
+    "section": "2. Importing data",
+    "text": "2. Importing data\n\nexam_data&lt;-read_csv(\"Exam_data.csv\")"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#tooltip",
     "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#tooltip",
     "title": "Hands-on Exercise 3-1",
     "section": "1. tooltip",
-    "text": "1. tooltip\nTooltip’s function is to display the information when the mouse is over elements.\n\n(1) Displaying one information on tooltip\n\np &lt;- ggplot(data=exam_data, aes(x = MATHS)) +\n  geom_dotplot_interactive(aes(tooltip = ID), stackgroups = TRUE, binwidth = 1, method = \"histodot\") +\n  scale_y_continuous(NULL, breaks = NULL)\n\ngirafe(ggobj = p, width_svg = 6, height_svg = 6*0.618)\n\n\n\n\n\n\n\n(2) Displaying multiple information on tooltip\n\nexam_data$tooltip &lt;- paste0(\"Name = \", exam_data$ID,\"\\n CLASS = \", exam_data$CLASS)\n# create a new field called tooltip, including ID and CLASS.\n# paste0(): to concatenate strings\n\np &lt;- ggplot(data=exam_data, aes(x = MATHS)) +\n  geom_dotplot_interactive(aes(tooltip = exam_data$tooltip), stackgroups = TRUE, binwidth = 1, method = \"histodot\") +\n  scale_y_continuous(NULL, breaks = NULL)\n\ngirafe(ggobj = p, width_svg = 6, height_svg = 6*0.618)\n\n\n\n\n\n\n\n(3) Customising Tooltip style\n\ntooltip_css &lt;- \"background-color:white; font-style:bold; color:black;\" \n\np &lt;- ggplot(data=exam_data, aes(x = MATHS)) +\n  geom_dotplot_interactive(aes(tooltip = ID), stackgroups = TRUE, binwidth = 1, method = \"histodot\") +\n  scale_y_continuous(NULL, breaks = NULL)\n\ngirafe(ggobj = p, width_svg = 6, height_svg = 6*0.618,\n  options = list(opts_tooltip(css = tooltip_css))) \n\n\n\n\n\n\n\n(4) Displaying statistics on tooltip\n\ntooltip &lt;- function(y, ymax, accuracy = .01) {\n  mean &lt;- scales::number(y, accuracy = accuracy)\n  sem &lt;- scales::number(ymax - y, accuracy = accuracy)\n  paste(\"Mean maths scores:\", mean, \"+/-\", sem)\n}\n\ngg_point &lt;- ggplot(data=exam_data, \n                   aes(x = RACE)) +\n  stat_summary(aes(y = MATHS, tooltip = after_stat(tooltip(y, ymax))),  \n    fun.data = \"mean_se\", geom = GeomInteractiveCol,fill = \"light pink\") +\n  stat_summary(aes(y = MATHS),fun.data = mean_se,geom = \"errorbar\", width = 0.2, size = 0.2)\n\ngirafe(ggobj = gg_point, width_svg = 8, height_svg = 8*0.618)"
+    "text": "1. tooltip\nTooltip’s function is to display the information when the mouse is over elements.\n\n(1) Displaying one information on tooltip\n\np &lt;- ggplot(data=exam_data, aes(x = MATHS)) +\n  geom_dotplot_interactive(aes(tooltip = ID), stackgroups = TRUE, \n                           binwidth = 1, method = \"histodot\") +\n  scale_y_continuous(NULL, breaks = NULL)\n\ngirafe(ggobj = p, width_svg = 6, height_svg = 6*0.618)\n\n\n\n\n\n\n\n(2) Displaying multiple information on tooltip\n\nexam_data$tooltip &lt;- paste0(\"Name = \", exam_data$ID,\"\\n CLASS = \", exam_data$CLASS)\n# create a new field called tooltip, including ID and CLASS.\n# paste0(): to concatenate strings\n\np &lt;- ggplot(data=exam_data, aes(x = MATHS)) +\n  geom_dotplot_interactive(aes(tooltip = exam_data$tooltip),\n                           stackgroups = TRUE, binwidth = 1, \n                           method = \"histodot\") +\n  scale_y_continuous(NULL, breaks = NULL)\n\ngirafe(ggobj = p, width_svg = 6, height_svg = 6*0.618)\n\n\n\n\n\n\n\n(3) Customising Tooltip style\n\ntooltip_css &lt;- \"background-color:white; font-style:bold; color:black;\" \n\np &lt;- ggplot(data=exam_data, aes(x = MATHS)) +\n  geom_dotplot_interactive(aes(tooltip = ID), stackgroups = TRUE, binwidth = 1, method = \"histodot\") +\n  scale_y_continuous(NULL, breaks = NULL)\n\ngirafe(ggobj = p, width_svg = 6, height_svg = 6*0.618,\n  options = list(opts_tooltip(css = tooltip_css))) \n\n\n\n\n\n\n\n(4) Displaying statistics on tooltip\n\ntooltip &lt;- function(y, ymax, accuracy = .01) {\n  mean &lt;- scales::number(y, accuracy = accuracy)\n  sem &lt;- scales::number(ymax - y, accuracy = accuracy)\n  paste(\"Mean maths scores:\", mean, \"+/-\", sem)\n}\n\ngg_point &lt;- ggplot(data=exam_data, \n                   aes(x = RACE)) +\n  stat_summary(aes(y = MATHS, tooltip = after_stat(tooltip(y, ymax))),  \n    fun.data = \"mean_se\", geom = GeomInteractiveCol,fill = \"light pink\") +\n  stat_summary(aes(y = MATHS),fun.data = mean_se,geom = \"errorbar\", width = 0.2, size = 0.2)\n\ngirafe(ggobj = gg_point, width_svg = 8, height_svg = 8*0.618)"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#data_id",

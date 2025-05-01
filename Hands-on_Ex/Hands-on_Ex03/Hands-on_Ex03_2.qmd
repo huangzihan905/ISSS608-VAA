@@ -1,0 +1,151 @@
+---
+title: "Hands-on_Ex03_2"
+author: "Huang Zihan"
+date: "May 1, 2025"
+date-modified: "last-modified"
+format: html
+editor: visual
+execute: 
+  eval: true
+  echo: true
+  warning: false
+---
+
+# 4 Programming Animated Statistical Graphics with R
+
+# 4.1 Terminology
+
+-   **Frame**: In an animated line graph, a frame shows the data at a specific time or category. As the animation moves to the next frame, the graph updates to show the new data.
+
+-   **Animation Attributes**: The animation attributes are the settings that control how the animation behaves — like how long each frame shows, how smoothly it moves between frames, and whether it restarts or continues from the current point.
+
+# 4.2 Getting started
+
+## 1. Loading the R packages
+
+-   **plotly**: R library for plotting interactive statistical graphs.
+
+-   **gganimate**: An ggplot extension for creating animated statistical graphs.
+
+-   **gifski**: To convert video frames to GIF animations.
+
+-   **gapminder**: An excerpt of the data available at Gapminder.org. We just want to use its country_colors scheme.
+
+-   **tidyverse**: A family of modern R packages specially designed to support data science, analysis and communication task.
+
+-   **readxl**: An R package used to read .xls and .xlsx into R.
+
+```{r}
+pacman::p_load(plotly, gganimate, gifski, gapminder, tidyverse, readxl)
+```
+
+## 2. Importing the data
+
+```{r}
+col <- c("Country", "Continent")
+# to create a character vector containing the values "Country", "Continent"
+
+globalPop <- read_xls("GlobalPopulation.xls", sheet="Data") %>%
+# %>% is the pipe operator in R, it passes the result of one function into the next
+  
+  mutate(across(all_of(col), as.factor)) %>%
+  # mutate(): to add or change columns in a data frame
+  # across(col, as.factor): to convert the col to factor type
+  # mutate_at() also can be used here
+  
+  mutate(Year = as.integer(Year))
+  # convert year to integer
+```
+
+# 4.3 Animated Data Visualisation: *gganimate*
+
+## 1. Building a static poplulation bubble plot
+
+```{r}
+ggplot(globalPop, aes(x = Old, y = Young, size = Population, colour = Country)) +
+  geom_point(alpha = 0.7, show.legend = FALSE) +
+  scale_colour_manual(values = country_colors) +
+  scale_size(range = c(2, 12)) +
+  labs(title = 'Year: {frame_time}', x = '% Aged', y = '% Young') 
+```
+
+## 2. Building the animated bubble plot
+
+-   **transition_time()** is used to create transition through distinct states in time (i.e. Year)
+
+-   **ease_aes()** is used to control easing of aesthetics. The default is linear. Other methods are as the following:
+
+    -   quadratic
+
+    -   cubic
+
+    -   quartic
+
+    -   quintic
+
+    -   sine
+
+    -   circular
+
+    -   exponential
+
+    -   elastic
+
+    -   back
+
+    -   bounce
+
+-   **view\_\*()**: to control the panel behavior
+
+-   **shadow\_\*()**: to keep traces of previous or future frames
+
+-   **enter\_\*()/exit\_\*()** : to define how elements appear and disappear
+
+```{r}
+ggplot(globalPop, aes(x = Old, y = Young, size = Population, colour = Country)) +
+  geom_point(alpha = 0.7, show.legend = FALSE) +
+  scale_colour_manual(values = country_colors) +
+  scale_size(range = c(2, 12)) +
+  labs(title = 'Year: {frame_time}', x = '% Aged', y = '% Young') +
+  
+  transition_time(Year) +       
+  ease_aes('linear') + 
+  view_follow(fixed_y = TRUE) + 
+  # follow the data horizontally
+  shadow_mark(past = TRUE, future = FALSE, alpha = 0.2) +
+  # keep traces of previous frames
+  enter_fade() + exit_shrink()
+```
+
+# 4.4 Animated Data Visualisation: *plotly*
+
+## 1. Building an animated bubble plot: ggploy()
+
+"show.legend = FALSE" doesn't work here, so here needs to use "theme(legend.position='none')"
+
+```{r}
+gg <- ggplot(globalPop, aes(x = Old, y = Young, size = Population,
+                            colour = Country)) +
+  geom_point(aes(size = Population, frame = Year), alpha = 0.7,
+             show.legend = FALSE) +
+  scale_colour_manual(values = country_colors) +
+  scale_size(range = c(2, 12)) +
+  labs(x = '% Aged', y = '% Young') + 
+  theme(legend.position='none')
+
+ggplotly(gg)
+```
+
+## 2. Building an animated bubble plot: plot_ly()
+
+```{r}
+bp <- globalPop %>%
+  
+  plot_ly(x = ~Old, y = ~Young, size = ~Population, color = ~Continent,
+          sizes = c(2, 100), frame = ~Year, text = ~Country, hoverinfo = "text",
+          type = 'scatter', mode = 'markers') %>%
+  
+  layout(showlegend = FALSE)
+
+bp
+```
