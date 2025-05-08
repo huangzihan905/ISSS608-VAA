@@ -1,0 +1,74 @@
+---
+title: "Hands-on_Ex04_2"
+author: "Huang Zihan"
+date: "May 7, 2025"
+date-modified: "last-modified"
+format: html
+editor: visual
+execute: 
+  eval: true
+  echo: true
+  warning: false
+---
+
+# 4-2 Visual Statistical Analysis
+
+## 1. Installing and Loading Packages
+
+ggstatsplot is an extension of ggplot2 package for creating graphics with details from statistical tests included in the information-rich plots themselves.
+
+```{r}
+pacman::p_load(ggstatsplot, tidyverse)
+```
+
+## 2. Importing Data
+
+```{r}
+exam <- read_csv("Exam_data.csv")
+```
+
+## 3. One-sample test: gghistostats() method
+
+```{r}
+set.seed(1234)
+
+gghistostats(data = exam, x = ENGLISH, type = "bayes",
+             test.value = 60, xlab = "English scores")
+```
+
+## 4. Two-sample mean test: ggbetweenstats()
+
+```{r}
+ggbetweenstats(data = exam, x = GENDER, y = MATHS,
+               type = "np", messages = FALSE)
+```
+
+## 5. Oneway ANOVA Test: ggbetweenstats() method
+
+```{r}
+ggbetweenstats(data = exam, x = RACE, y = ENGLISH,
+               type = "p", mean.ci = TRUE,
+               pairwise.comparisons = TRUE,
+               pairwise.display = "s",
+               p.adjust.method = "fdr",
+               messages = FALSE)
+```
+
+## 6. Significant Test of Correlation: ggscatterstats()
+
+```{r}
+ggscatterstats(data = exam, x = MATHS, y = ENGLISH,
+               marginal = FALSE)
+```
+
+## 7. Significant Test of Association (Depedence) : ggbarstats() methods
+
+```{r}
+exam1 <- exam %>% 
+  mutate(MATHS_bins =
+           cut(MATHS, breaks = c(0,60,75,85,100)))
+```
+
+```{r}
+ggbarstats(exam1, x = MATHS_bins, y = GENDER)
+```

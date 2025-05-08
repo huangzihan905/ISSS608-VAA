@@ -1,0 +1,154 @@
+---
+title: "Hands-on_Ex04_1"
+author: "Huang Zihan"
+date: "May 7, 2025"
+date-modified: "last-modified"
+format: html
+editor: visual
+execute: 
+  eval: true
+  echo: true
+  warning: false
+---
+
+# 4-1 Visualizing Distribution
+
+## 4.1 Getting Started
+
+### 4.1.1 Installing and Loading Packages
+
+-   ggridges, a ggplot2 extension specially designed for plotting ridgeline plots
+
+-   ggdist, a ggplot2 extension specially desgin for visualising distribution and uncertainty
+
+-   colorspace, an R package provides a broad toolbox for selecting individual colors or color palettes, manipulating these colors, and employing them in various kinds of visualisations.
+
+```{r}
+pacman::p_load(ggdist, ggridges, ggthemes, colorspace, tidyverse)
+```
+
+### 4.1.2 Data Import
+
+```{r}
+exam <- read_csv("Exam_data.csv")
+```
+
+## 4.2 Visualizing Distribution with Ridgeline Plot
+
+### 4.2.1 Plotting ridgeline graph: ggridges method
+
+ggridges package provides two main geom to plot gridgeline plots:
+
+-   geom_ridgeline(): takes height values directly to draw the ridgelines.
+
+-   geom_density_ridges(): estimates data densities first and then draws those using ridgelines.
+
+```{r}
+ggplot(exam, aes(x = ENGLISH, y = CLASS)) +
+  geom_density_ridges(scale = 3, rel_min_height = 0.01,
+                      bandwidth = 3.4,
+                      fill = lighten("#7097BB", .3),
+                      color = "white") +
+  scale_x_continuous(name = "English grades",expand = c(0, 0)) +
+  scale_y_discrete(name = NULL, 
+                   expand = expansion(add = c(0.2, 2.6))) +
+  theme_ridges()
+```
+
+### 4.2.2 Varying fill colors along the x axis
+
+geom_ridgeline_gradient() or geom_density_ridges_gradient() can be used to vary fill color along the x axis. However, they do not allow for alpha transparency in the fill. For technical reasons, we can have changing fill colors or transparency but not both.
+
+```{r}
+ggplot(exam, aes(x = ENGLISH, y = CLASS, fill = stat(x))) +
+  geom_density_ridges_gradient(scale = 3,
+                               rel_min_height = 0.01) +
+  scale_fill_viridis_c(name = "Temp. [F]", option = "C") +
+  scale_x_continuous(name = "English grades",
+                     expand = c(0, 0)) +
+  scale_y_discrete(name = NULL, 
+                   expand = expansion(add = c(0.2, 2.6))) +
+  theme_ridges()
+```
+
+## 4.2.3 Mapping the probabilities directly onto colour: stat_density_ridges()
+
+```{r}
+ggplot(exam, aes(x = ENGLISH, y = CLASS,
+                 fill = 0.5 - abs(0.5-stat(ecdf)))) +
+  stat_density_ridges(geom = "density_ridges_gradient",
+                      calc_ecdf = TRUE) +
+  scale_fill_viridis_c(name = "Tail probability", 
+                       direction = -1) +
+  theme_ridges()
+```
+
+## 4.2.4 Ridgeline plots with quantile lines
+
+By using geom_density_ridges_gradient(), we can colour the ridgeline plot by quantile.
+
+```{r}
+ggplot(exam, aes(x = ENGLISH, y = CLASS,
+                 fill = factor(stat(quantile)))) +
+  stat_density_ridges(geom = "density_ridges_gradient",
+                      calc_ecdf = TRUE, quantiles = 4,
+                      quantile_lines = TRUE) +
+  scale_fill_viridis_d(name = "Quartiles") +
+  theme_ridges()
+```
+
+we can also specify quantiles by cut points such as 10% and 90% tails to colour the ridgeline plot as shown in the figure below.
+
+```{r}
+ggplot(exam, aes(x = ENGLISH, y = CLASS, 
+                 fill = factor(stat(quantile)))) +
+  stat_density_ridges(geom = "density_ridges_gradient",
+                      calc_ecdf = TRUE, 
+                      quantiles = c(0.100, 0.900)) +
+  scale_fill_manual(name = "Probability", values = c("#FF0000A0", "#A0A0A0A0", "#0000FFA0"), labels = c("(0, 0.100]", "(0.100, 0.900]", "(0.900, 1]")) +
+  theme_ridges()
+```
+
+## 4.3 Visualising Distribution with Raincloud Plot
+
+### 4.3.1 Plotting a Half Eye graph: stat_halfeye()
+
+```{r}
+ggplot(exam, aes(x = RACE, y = ENGLISH)) +
+  stat_halfeye(adjust = 0.5, justification = -0.2,
+               .width = 0, point_colour = NA)
+```
+
+### 4.3.2 Adding the boxplot with geom_boxplot()
+
+```{r}
+ggplot(exam, aes(x = RACE, y = ENGLISH)) +
+  stat_halfeye(adjust = 0.5, justification = -0.2,
+               .width = 0, point_colour = NA) +
+  geom_boxplot(width = .20, outlier.shape = NA)
+```
+
+### 4.3.3 Adding the Dot Plots with stat_dots()
+
+```{r}
+ggplot(exam, aes(x = RACE, y = ENGLISH)) +
+  stat_halfeye(adjust = 0.5, justification = -0.2,
+               .width = 0, point_colour = NA) +
+  geom_boxplot(width = .20, outlier.shape = NA) +
+  stat_dots(side = "left", justification = 1.2, 
+            binwidth = .5, dotsize = 2)
+```
+
+### 4.3.4 Finish touching
+
+coord_flip() of ggplot2 package can be used to flip the raincloud chart horizontally. Besides, themes in the ggthemes package can be used to give the raincloud chart a professional publishing standard look.
+
+```{r}
+ggplot(exam, aes(x = RACE, y = ENGLISH)) +
+  stat_halfeye(adjust = 0.5, justification = -0.2,
+               .width = 0, point_colour = NA) +
+  geom_boxplot(width = .20, outlier.shape = NA) +
+  stat_dots(side = "left", justification = 1.2, 
+            binwidth = .5, dotsize = 1.5) +
+  coord_flip() + theme_wsj()
+```
