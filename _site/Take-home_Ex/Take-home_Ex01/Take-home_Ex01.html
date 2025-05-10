@@ -200,21 +200,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">1 Overview</a></li>
+  <li><a href="#phase-i" id="toc-phase-i" class="nav-link active" data-scroll-target="#phase-i">Phase I</a>
+  <ul class="collapse">
+  <li><a href="#overview" id="toc-overview" class="nav-link" data-scroll-target="#overview">1 Overview</a></li>
   <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link" data-scroll-target="#data-preparation">2 Data Preparation</a>
   <ul class="collapse">
   <li><a href="#loading-packages" id="toc-loading-packages" class="nav-link" data-scroll-target="#loading-packages">2.1 Loading Packages</a></li>
-  <li><a href="#understand-the-dataset" id="toc-understand-the-dataset" class="nav-link" data-scroll-target="#understand-the-dataset">2.2 Understand the dataset</a>
-  <ul class="collapse">
-  <li><a href="#data-source" id="toc-data-source" class="nav-link" data-scroll-target="#data-source">Data Source</a></li>
-  <li><a href="#data-explanation" id="toc-data-explanation" class="nav-link" data-scroll-target="#data-explanation">Data Explanation</a></li>
-  </ul></li>
+  <li><a href="#understand-the-dataset" id="toc-understand-the-dataset" class="nav-link" data-scroll-target="#understand-the-dataset">2.2 Understand the dataset</a></li>
   <li><a href="#importing-data" id="toc-importing-data" class="nav-link" data-scroll-target="#importing-data">2.3 Importing Data</a></li>
-  <li><a href="#data-clean-and-transform" id="toc-data-clean-and-transform" class="nav-link" data-scroll-target="#data-clean-and-transform">2.4 Data Clean and Transform</a>
-  <ul class="collapse">
-  <li><a href="#data-clean" id="toc-data-clean" class="nav-link" data-scroll-target="#data-clean">2.4.1 Data Clean</a></li>
-  <li><a href="#filter-aging-group-65" id="toc-filter-aging-group-65" class="nav-link" data-scroll-target="#filter-aging-group-65">2.4.2 Filter Aging Group (65+)</a></li>
-  </ul></li>
+  <li><a href="#data-clean-and-transform" id="toc-data-clean-and-transform" class="nav-link" data-scroll-target="#data-clean-and-transform">2.4 Data Clean and Transform</a></li>
   </ul></li>
   <li><a href="#visualization-charts" id="toc-visualization-charts" class="nav-link" data-scroll-target="#visualization-charts">3 Visualization Charts</a>
   <ul class="collapse">
@@ -223,7 +217,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#heatmap-age-distribution-by-planning-area" id="toc-heatmap-age-distribution-by-planning-area" class="nav-link" data-scroll-target="#heatmap-age-distribution-by-planning-area">3.3 Heatmap: Age Distribution by Planning Area</a></li>
   </ul></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">4 Conclusion</a></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">5 References</a></li>
+  </ul></li>
+  <li><a href="#phase-ii" id="toc-phase-ii" class="nav-link" data-scroll-target="#phase-ii">Phase II</a>
+  <ul class="collapse">
+  <li><a href="#original-visualization" id="toc-original-visualization" class="nav-link" data-scroll-target="#original-visualization">5 Original Visualization</a>
+  <ul class="collapse">
+  <li><a href="#good-points-of-the-visualization" id="toc-good-points-of-the-visualization" class="nav-link" data-scroll-target="#good-points-of-the-visualization">5.1 Good Points of the Visualization</a></li>
+  <li><a href="#areas-for-further-improvement" id="toc-areas-for-further-improvement" class="nav-link" data-scroll-target="#areas-for-further-improvement">5.2 Areas for Further Improvement</a></li>
+  <li><a href="#makeover-version-of-the-data-visualization" id="toc-makeover-version-of-the-data-visualization" class="nav-link" data-scroll-target="#makeover-version-of-the-data-visualization">5.3 Makeover Version of the Data Visualization</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">6 References</a></li>
   </ul>
 </nav>
     </div>
@@ -256,7 +260,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">May 8, 2025</p>
+      <p class="date-modified">May 10, 2025</p>
     </div>
   </div>
     
@@ -267,26 +271,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="overview" class="level1">
-<h1>1 Overview</h1>
+<section id="phase-i" class="level1">
+<h1>Phase I</h1>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">1 Overview</h2>
 <p>As Singapore’s population ages rapidly, understanding demographic structures and spatial distributions is more critical than ever. The objective for this visualize analysis is to uncover meaningful patterns in the aging demographic using three visualizations: a population pyramid to show the overall age-gender distribution, a bar chart to compare elderly proportions by planning area, and a heatmap to explore age group concentrations across regions. These visualizations aim to support public awareness and inform urban planners and policymakers on how the aging population is evolving geographically and demographically.</p>
 </section>
-<section id="data-preparation" class="level1">
-<h1>2 Data Preparation</h1>
-<section id="loading-packages" class="level2">
-<h2 class="anchored" data-anchor-id="loading-packages">2.1 Loading Packages</h2>
+<section id="data-preparation" class="level2">
+<h2 class="anchored" data-anchor-id="data-preparation">2 Data Preparation</h2>
+<section id="loading-packages" class="level3">
+<h3 class="anchored" data-anchor-id="loading-packages">2.1 Loading Packages</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse,dplyr, janitor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="understand-the-dataset" class="level2">
-<h2 class="anchored" data-anchor-id="understand-the-dataset">2.2 Understand the dataset</h2>
-<section id="data-source" class="level3">
-<h3 class="anchored" data-anchor-id="data-source">Data Source</h3>
+<section id="understand-the-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="understand-the-dataset">2.2 Understand the dataset</h3>
+<section id="data-source" class="level4">
+<h4 class="anchored" data-anchor-id="data-source">Data Source</h4>
 <p>The dataset used in this analysis is titled “<em>Singapore Residents by Planning Area / Subzone, Single Year of Age and Sex, June 2024</em>”, published by the Department of Statistics (DOS), Singapore. It provides demographic data of resident populations segmented by planning area, subzone, single year of age (from 0 to “90_and_over”), population number and sex (male and female), as of June 2024.</p>
 </section>
-<section id="data-explanation" class="level3">
-<h3 class="anchored" data-anchor-id="data-explanation">Data Explanation</h3>
+<section id="data-explanation" class="level4">
+<h4 class="anchored" data-anchor-id="data-explanation">Data Explanation</h4>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 33%">
@@ -335,8 +341,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 </section>
 </section>
-<section id="importing-data" class="level2">
-<h2 class="anchored" data-anchor-id="importing-data">2.3 Importing Data</h2>
+<section id="importing-data" class="level3">
+<h3 class="anchored" data-anchor-id="importing-data">2.3 Importing Data</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>sgresidents_2024 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"respopagesex2024/respopagesex2024.csv"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(sgresidents_2024)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -352,17 +358,17 @@ $ Time &lt;dbl&gt; 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2
 </div>
 </div>
 </section>
-<section id="data-clean-and-transform" class="level2">
-<h2 class="anchored" data-anchor-id="data-clean-and-transform">2.4 Data Clean and Transform</h2>
-<section id="data-clean" class="level3">
-<h3 class="anchored" data-anchor-id="data-clean">2.4.1 Data Clean</h3>
+<section id="data-clean-and-transform" class="level3">
+<h3 class="anchored" data-anchor-id="data-clean-and-transform">2.4 Data Clean and Transform</h3>
+<section id="data-clean" class="level4">
+<h4 class="anchored" data-anchor-id="data-clean">2.4.1 Data Clean</h4>
 <p>The column names in the original dataset were cleaned and standardized by using the clean_names() function from the janitor package. This step converts all column names to lowercase and replaces spaces or special characters with underscores, ensuring they are consistent and easier to reference in subsequent code.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>sgresidents_2024 <span class="ot">&lt;-</span> sgresidents_2024 <span class="sc">%&gt;%</span> <span class="fu">clean_names</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="filter-aging-group-65" class="level3">
-<h3 class="anchored" data-anchor-id="filter-aging-group-65">2.4.2 Filter Aging Group (65+)</h3>
+<section id="filter-aging-group-65" class="level4">
+<h4 class="anchored" data-anchor-id="filter-aging-group-65">2.4.2 Filter Aging Group (65+)</h4>
 <p>This step filters the dataset to focus on the aging population, defined as residents aged 65 and above. Since the age column includes the value “90_and_Over” as a character string, it was first replaced with “90” to allow for numeric conversion. The age column was then converted to integer format. We filtered the dataset to retain only records where age is 65 or higher and excluded any rows with missing planning area (pa) or population (pop) values.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>elderly <span class="ot">&lt;-</span> sgresidents_2024 <span class="sc">%&gt;%</span></span>
@@ -375,10 +381,10 @@ $ Time &lt;dbl&gt; 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2
 </section>
 </section>
 </section>
-<section id="visualization-charts" class="level1">
-<h1>3 Visualization Charts</h1>
-<section id="population-pyramid" class="level2">
-<h2 class="anchored" data-anchor-id="population-pyramid">3.1 Population Pyramid</h2>
+<section id="visualization-charts" class="level2">
+<h2 class="anchored" data-anchor-id="visualization-charts">3 Visualization Charts</h2>
+<section id="population-pyramid" class="level3">
+<h3 class="anchored" data-anchor-id="population-pyramid">3.1 Population Pyramid</h3>
 <p>The population pyramid of Singapore in 2024 illustrates a distinctly aging demographic. The population is mainly concentrated between 40 and 60 years old, which means Singapore is stepping into an aging society. The tapering base reflects a low birth rate in recent decades, with significantly fewer residents under age 20.</p>
 <p>The gender split is also apparent. Female residents increasingly outnumber males in the oldest age, which can support the statement of longer female life expectancy.</p>
 <p>This aging structure suggests future challenges, including rising healthcare needs, a shrinking workforce, etc. The visulization underscores the urgency for social policies to support an elderly-centric population society.</p>
@@ -413,8 +419,8 @@ $ Time &lt;dbl&gt; 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2
 </div>
 </div>
 </section>
-<section id="aging-by-planning-area-proportion-aged-65" class="level2">
-<h2 class="anchored" data-anchor-id="aging-by-planning-area-proportion-aged-65">3.2 Aging by Planning Area (Proportion Aged 65+)</h2>
+<section id="aging-by-planning-area-proportion-aged-65" class="level3">
+<h3 class="anchored" data-anchor-id="aging-by-planning-area-proportion-aged-65">3.2 Aging by Planning Area (Proportion Aged 65+)</h3>
 <p>The bar chart shows the percentage of elderly residents (aged 65 and above) in each planning area of Singapore as of June 2024.</p>
 <p>From the chart, it is clear that some areas with long-established communities have a higher percentage of aging residents than others. For example, areas like Outram, Ang Mo Kio, and Bukit Merah have the highest proportions of elderly people, with more than 24% of their residents aged 65 or older.</p>
 <p>On the other hand, newer or developing areas like have much lower proportions of elderly, likely because younger families are moving in and the towns are still growing.</p>
@@ -459,8 +465,8 @@ $ Time &lt;dbl&gt; 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2
 </div>
 </div>
 </section>
-<section id="heatmap-age-distribution-by-planning-area" class="level2">
-<h2 class="anchored" data-anchor-id="heatmap-age-distribution-by-planning-area">3.3 Heatmap: Age Distribution by Planning Area</h2>
+<section id="heatmap-age-distribution-by-planning-area" class="level3">
+<h3 class="anchored" data-anchor-id="heatmap-age-distribution-by-planning-area">3.3 Heatmap: Age Distribution by Planning Area</h3>
 <p>Since in the 3.2 section, we found that the aging distribution is not evenly spread. Therefore, in this section, the heatmap shows how the elderly population is distributed across different planning areas and age groups in Singapore.</p>
 <p>Each cell’s color represents the number of elderly people. Lighter cells mean more people in that age group and area. From the chart, we can see that areas like Bedok, Tampines, Hougang have the largest elderly populations, especially in the 65–74 age group.</p>
 <p>This heatmap helps us understand not just where elderly people live, but also their age range. For instance, Bedok has the highest number of population which focus on 65-74 age group, which mean that it would have highest number of 85+ age group in 10 - 20 years. This forecasting can help the government prepare to support these areas.</p>
@@ -504,13 +510,238 @@ $ Time &lt;dbl&gt; 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2
 </div>
 </section>
 </section>
-<section id="conclusion" class="level1">
-<h1>4 Conclusion</h1>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">4 Conclusion</h2>
 <p>Three visulization charts provide a clear picture of Singapore’s aging population and how it is distributed across planning areas.</p>
 <p>The population pyramid confirms that Singapore is a rapidly aging society, with a shrinking youth base and a growing older adult population. The bar chart highlights the areas with higher elders percentage. The heatmap adds another layer of insight by showing which planning areas have the largest numbers of elderly in each age group. These findings underscore the importance of elder care infrastructures planning, and community services tailored to local aging trends across Singapore.</p>
 </section>
+</section>
+<section id="phase-ii" class="level1">
+<h1>Phase II</h1>
+<section id="original-visualization" class="level2">
+<h2 class="anchored" data-anchor-id="original-visualization">5 Original Visualization</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Justification
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>I chose to analyze this population pyramid because it is very similar to the first one I built for my own visualization. As I worked on mine, I was aware of the areas that could be enhanced to make the chart more understandable and informative. I discovered a few problems with my peer’s version, including some unclear labeling and potentially incorrect values, particularly with the method that the population was calculated or presented. This allowed me to think about both her and my plot and then try to make it better in my modified version.</p>
+</div>
+</div>
+<p><a href="https://isss608-cindy.netlify.app/take-home_exercise/take-home_ex01/take-home_ex01a">My Peer’s work</a></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>pyramid_data <span class="ot">&lt;-</span> sgresidents_2024 <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(age, sex) <span class="sc">%&gt;%</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">pop =</span> <span class="fu">sum</span>(pop), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pop =</span> <span class="fu">ifelse</span>(sex <span class="sc">==</span> <span class="st">"Males"</span>, <span class="sc">-</span>pop, pop))</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pyramid_data, <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> pop, <span class="at">fill =</span> sex)) <span class="sc">+</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> abs) <span class="sc">+</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Males"</span> <span class="ot">=</span> <span class="st">"#102E50"</span>, <span class="st">"Females"</span> <span class="ot">=</span> <span class="st">"#F7CFD8"</span>)) <span class="sc">+</span> </span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">100</span>, <span class="at">by =</span> <span class="dv">10</span>)) <span class="sc">+</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Singapore Age Pyramid (2024)"</span>,</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Age"</span>, <span class="at">y =</span> <span class="st">"Population"</span>) <span class="sc">+</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex01_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="good-points-of-the-visualization" class="level3">
+<h3 class="anchored" data-anchor-id="good-points-of-the-visualization">5.1 Good Points of the Visualization</h3>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Good Points of the Visualization
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Effective Use of Symmetry for Comparison
+<ul>
+<li>The mirrored layout allows direct visual comparison between males and females across age groups, taking advantage of pre-attentive processing—our brains can instantly detect asymmetries or trends.</li>
+</ul></li>
+<li>Clear Visual Contrast Between Genders
+<ul>
+<li>The use of distinct colors (<code>#102E50</code> for Males and <code>#F7CFD8</code> for Females) provides a strong contrast, making it easy to differentiate between the two groups at a glance.</li>
+</ul></li>
+<li>Clean Axes and Labeling
+<ul>
+<li>Labels are direct and aligned with the variable meanings (Age, Population) and axes are flipped for better age group readability—respecting orientation best practices for such charts.</li>
+</ul></li>
+</ol>
+</div>
+</div>
+</section>
+<section id="areas-for-further-improvement" class="level3">
+<h3 class="anchored" data-anchor-id="areas-for-further-improvement">5.2 Areas for Further Improvement</h3>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Areas for Further Improvement
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Unbalanced X-Axis for Population
+<ul>
+<li><strong>Issue:</strong> The x-axis (population) scale is not symmetric, making male and female distributions visually unequal even if numbers are comparable.</li>
+<li><strong>Improvement:</strong> Use <code>scale_y_continuous(limits = c(-max, max))</code> to ensure balanced comparison between both sides.</li>
+</ul></li>
+<li>Lack of Data Labels
+<ul>
+<li><strong>Issue:</strong> The bars show magnitude but lack percentage or population labels, which limits interpretability, especially for identifying the proportion of each group.</li>
+<li><strong>Improvement:</strong> Add <code>geom_text()</code> to display percentages (or absolute values), enhancing clarity and precision.</li>
+</ul></li>
+<li>Limited Context or Insights
+<ul>
+<li><strong>Issue:</strong> The chart has no subtitle and annotations to help viewers interpret demographic trends (e.g., aging population bulge).</li>
+<li><strong>Improvement:</strong> Add a subtitle, annotations texts to guide interpretation and highlight key demographic observations.</li>
+</ul></li>
+</ol>
+</div>
+</div>
+</section>
+<section id="makeover-version-of-the-data-visualization" class="level3">
+<h3 class="anchored" data-anchor-id="makeover-version-of-the-data-visualization">5.3 Makeover Version of the Data Visualization</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>pyramid_data <span class="ot">&lt;-</span> sgresidents_2024 <span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age =</span> <span class="fu">if_else</span>(age <span class="sc">==</span> <span class="st">"90_and_Over"</span>, <span class="st">"90"</span>, age),</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">age =</span> <span class="fu">as.integer</span>(age)) <span class="sc">%&gt;%</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(age <span class="sc">&lt;=</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(age, sex) <span class="sc">%&gt;%</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">population =</span> <span class="fu">sum</span>(pop), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">population =</span> <span class="fu">if_else</span>(sex <span class="sc">==</span> <span class="st">"Females"</span>, <span class="sc">-</span>population, population),</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">age =</span> <span class="fu">factor</span>(age, <span class="at">levels =</span> <span class="fu">sort</span>(<span class="fu">unique</span>(age))))  <span class="co"># Fix for axis labels</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>age_totals <span class="ot">&lt;-</span> pyramid_data <span class="sc">%&gt;%</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(age) <span class="sc">%&gt;%</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">age_total =</span> <span class="fu">sum</span>(<span class="fu">abs</span>(population)))</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>pyramid_data <span class="ot">&lt;-</span> pyramid_data <span class="sc">%&gt;%</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(age_totals, <span class="at">by =</span> <span class="st">"age"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">percent =</span> <span class="fu">abs</span>(population) <span class="sc">/</span> age_total <span class="sc">*</span> <span class="dv">100</span>)</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pyramid_data, <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> population, <span class="at">fill =</span> sex)) <span class="sc">+</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>(<span class="at">clip =</span> <span class="st">"off"</span>) <span class="sc">+</span></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> abs,</span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">40000</span>, <span class="dv">40000</span>),</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)</span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Males"</span> <span class="ot">=</span> <span class="st">"#446AAB"</span>, <span class="st">"Females"</span> <span class="ot">=</span> <span class="st">"#D97A95"</span>)) <span class="sc">+</span> </span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">paste0</span>(<span class="fu">round</span>(percent, <span class="dv">1</span>), <span class="st">"%"</span>)),</span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>            <span class="at">position =</span> <span class="st">"identity"</span>,</span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>            <span class="at">hjust =</span> <span class="fu">ifelse</span>(pyramid_data<span class="sc">$</span>sex <span class="sc">==</span> <span class="st">"Males"</span>, <span class="fl">1.05</span>, <span class="sc">-</span><span class="fl">0.05</span>),</span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>            <span class="at">size =</span> <span class="fl">2.8</span>,</span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>            <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">100</span>, <span class="at">by =</span> <span class="dv">10</span>)) <span class="sc">+</span></span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="dv">95</span>, <span class="at">y =</span> <span class="sc">-</span><span class="dv">36000</span>, <span class="at">label =</span> <span class="st">"Females"</span>, <span class="at">color =</span> <span class="st">"#D97A95"</span>, </span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>           <span class="at">size =</span> <span class="dv">5</span>, <span class="at">hjust =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="dv">95</span>, <span class="at">y =</span> <span class="dv">36000</span>, <span class="at">label =</span> <span class="st">"Males"</span>, <span class="at">color =</span> <span class="st">"#446AAB"</span>, </span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>           <span class="at">size =</span> <span class="dv">5</span>, <span class="at">hjust =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Singapore Age Pyramid (2024)"</span>,</span>
+<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Females on the left (pink), Males on the right (blue),"</span>,</span>
+<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Age"</span>,</span>
+<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Population"</span></span>
+<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb13-47"><a href="#cb13-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>,</span>
+<span id="cb13-48"><a href="#cb13-48" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">25</span>),</span>
+<span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">25</span>),</span>
+<span id="cb13-50"><a href="#cb13-50" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>),</span>
+<span id="cb13-51"><a href="#cb13-51" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>),</span>
+<span id="cb13-52"><a href="#cb13-52" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">30</span>, <span class="at">face =</span> <span class="st">"bold"</span>,<span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb13-53"><a href="#cb13-53" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb13-54"><a href="#cb13-54" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.margin =</span> <span class="fu">margin</span>(<span class="dv">10</span>, <span class="dv">40</span>, <span class="dv">10</span>, <span class="dv">40</span>),</span>
+<span id="cb13-55"><a href="#cb13-55" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>),</span>
+<span id="cb13-56"><a href="#cb13-56" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">25</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex01_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="1248"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Improvements (makeover version vs original version)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Reversed Axis Annotation and Added Subtitle
+<ul>
+<li>I swapped the annotation positions so that Females are labeled on the left (negative side) and Males on the right (positive side), matching the plot structure. Also by adding the subtitle under the plot title stating the positions and color of the male and female, which clears up confusion for viewers unfamiliar with the convention, making the chart easier to interpret.</li>
+</ul></li>
+<li>Increased Plot Range and Margin for Visibility
+<ul>
+<li>I expanded the <code>scale_y_continuous()</code> limits and margins, and used <code>clip = "off"</code> to ensure annotations were not cut off. This ensure that all labels and annotations are fully visible within the chart area.</li>
+</ul></li>
+<li>Added Percent Labels Within Bars
+<ul>
+<li>I used <code>geom_text()</code> to include the percentage distribution for each age group. Making the chart more informative at a glance, showing both proportion and distribution without requiring estimation.</li>
+</ul></li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Advantages (i.e.&nbsp;why do these improvements)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Easier Interpretation for All Audiences
+<ul>
+<li>Adding clear annotations (“Males” and “Females”) and a helpful subtitle guides viewers—especially those unfamiliar with population pyramids—to understand which side represents which gender, reducing misinterpretation.</li>
+</ul></li>
+<li>Enhanced Data Readability
+<ul>
+<li>Including percentage labels inside the bars helps readers instantly grasp the proportion of each gender in each age group, without needing to estimate from the axis.</li>
+</ul></li>
+<li>Improved Visual Structure
+<ul>
+<li>A more polished and comprehensive design is produced by adjusting the annotations and expanding the plot margins to ensure that all components—labels and annotations—are completely visible and not covered.</li>
+</ul></li>
+</ol>
+</div>
+</div>
+</section>
+</section>
+</section>
 <section id="references" class="level1">
-<h1>5 References</h1>
+<h1>6 References</h1>
 <p><a href="https://www.singstat.gov.sg/find-data/search-by-theme/population/geographic-distribution/latest-data">Singapore Residents by Planning Area / Subzone, Single Year of Age and Sex, June 2024</a></p>
 
 
