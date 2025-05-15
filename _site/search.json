@@ -49,228 +49,277 @@
     "text": "Welcome to ISSS608 Visual Analytics and Application. In this website, you will find my coursework prepared for this course."
   },
   {
-    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html",
-    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html",
-    "title": "Hands-on_Ex02",
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#reviewing-the-imported-data",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#reviewing-the-imported-data",
+    "title": "Hands-on_Ex05",
+    "section": "2.1 Reviewing the imported data",
+    "text": "2.1 Reviewing the imported data\n\nglimpse(GAStech_edges)\n\nRows: 9,063\nColumns: 8\n$ source      &lt;dbl&gt; 43, 43, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 26, 26, 26…\n$ target      &lt;dbl&gt; 41, 40, 51, 52, 53, 45, 44, 46, 48, 49, 47, 54, 27, 28, 29…\n$ SentDate    &lt;chr&gt; \"6/1/2014\", \"6/1/2014\", \"6/1/2014\", \"6/1/2014\", \"6/1/2014\"…\n$ SentTime    &lt;time&gt; 08:39:00, 08:39:00, 08:58:00, 08:58:00, 08:58:00, 08:58:0…\n$ Subject     &lt;chr&gt; \"GT-SeismicProcessorPro Bug Report\", \"GT-SeismicProcessorP…\n$ MainSubject &lt;chr&gt; \"Work related\", \"Work related\", \"Work related\", \"Work rela…\n$ sourceLabel &lt;chr&gt; \"Sven.Flecha\", \"Sven.Flecha\", \"Kanon.Herrero\", \"Kanon.Herr…\n$ targetLabel &lt;chr&gt; \"Isak.Baza\", \"Lucas.Alcazar\", \"Felix.Resumir\", \"Hideki.Coc…"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#wrangling-time",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#wrangling-time",
+    "title": "Hands-on_Ex05",
+    "section": "2.2 Wrangling time",
+    "text": "2.2 Wrangling time\n\nGAStech_edges &lt;- GAStech_edges %&gt;%\n  mutate(SendDate = dmy(SentDate)) %&gt;%\n  mutate(Weekday = wday(SentDate, label = TRUE, abbr = FALSE))\n\n\n2.2.1 Reviewing the revised data fields\n\nglimpse(GAStech_edges)\n\nRows: 9,063\nColumns: 10\n$ source      &lt;dbl&gt; 43, 43, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 26, 26, 26…\n$ target      &lt;dbl&gt; 41, 40, 51, 52, 53, 45, 44, 46, 48, 49, 47, 54, 27, 28, 29…\n$ SentDate    &lt;chr&gt; \"6/1/2014\", \"6/1/2014\", \"6/1/2014\", \"6/1/2014\", \"6/1/2014\"…\n$ SentTime    &lt;time&gt; 08:39:00, 08:39:00, 08:58:00, 08:58:00, 08:58:00, 08:58:0…\n$ Subject     &lt;chr&gt; \"GT-SeismicProcessorPro Bug Report\", \"GT-SeismicProcessorP…\n$ MainSubject &lt;chr&gt; \"Work related\", \"Work related\", \"Work related\", \"Work rela…\n$ sourceLabel &lt;chr&gt; \"Sven.Flecha\", \"Sven.Flecha\", \"Kanon.Herrero\", \"Kanon.Herr…\n$ targetLabel &lt;chr&gt; \"Isak.Baza\", \"Lucas.Alcazar\", \"Felix.Resumir\", \"Hideki.Coc…\n$ SendDate    &lt;date&gt; 2014-01-06, 2014-01-06, 2014-01-06, 2014-01-06, 2014-01-0…\n$ Weekday     &lt;ord&gt; Friday, Friday, Friday, Friday, Friday, Friday, Friday, Fr…"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#wrangling-attributes",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#wrangling-attributes",
+    "title": "Hands-on_Ex05",
+    "section": "2.3 Wrangling attributes",
+    "text": "2.3 Wrangling attributes\n\nGAStech_edges_aggregated &lt;- GAStech_edges %&gt;%\n  filter(MainSubject == \"Work related\") %&gt;%\n  group_by(source, target, Weekday) %&gt;%\n    summarise(Weight = n()) %&gt;%\n  filter(source!=target) %&gt;%\n  filter(Weight &gt; 1) %&gt;%\n  ungroup()\n\n\n2.3.1 Reviewing the revised edges file\n\nglimpse(GAStech_edges_aggregated)\n\nRows: 1,372\nColumns: 4\n$ source  &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…\n$ target  &lt;dbl&gt; 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6,…\n$ Weekday &lt;ord&gt; Sunday, Monday, Tuesday, Wednesday, Friday, Sunday, Monday, Tu…\n$ Weight  &lt;int&gt; 5, 2, 3, 4, 6, 5, 2, 3, 4, 6, 5, 2, 3, 4, 6, 5, 2, 3, 4, 6, 5,…"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#the-tbl_graph-object",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#the-tbl_graph-object",
+    "title": "Hands-on_Ex05",
+    "section": "3.1 The tbl_graph object",
+    "text": "3.1 The tbl_graph object\n\ntbl_graph() creates a tbl_graph network object from nodes and edges data.\nas_tbl_graph() converts network data and objects to a tbl_graph network. Below are network data and objects supported by as_tbl_graph()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#the-dplyr-verbs-in-tidygraph",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#the-dplyr-verbs-in-tidygraph",
+    "title": "Hands-on_Ex05",
+    "section": "3.2 THe dplyr verbs in tidygraph",
+    "text": "3.2 THe dplyr verbs in tidygraph\n\nactivate() verb from tidygraph serves as a switch between tibbles for nodes and edges. All dplyr verbs applied to tbl_graph object are applied to the active tibble."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#using-tbl_graph-to-build-tidygraph-data-model.",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#using-tbl_graph-to-build-tidygraph-data-model.",
+    "title": "Hands-on_Ex05",
+    "section": "3.3 Using tbl_graph() to build tidygraph data model.",
+    "text": "3.3 Using tbl_graph() to build tidygraph data model.\n\nGAStech_graph &lt;- tbl_graph(nodes = GAStech_nodes,\n                           edges = GAStech_edges_aggregated, \n                           directed = TRUE)\n\n\n3.3.1 Reviewing the output tidygraph’s graph object\n\nGAStech_graph\n\n# A tbl_graph: 54 nodes and 1372 edges\n#\n# A directed multigraph with 1 component\n#\n# Node Data: 54 × 4 (active)\n      id label               Department     Title                               \n   &lt;dbl&gt; &lt;chr&gt;               &lt;chr&gt;          &lt;chr&gt;                               \n 1     1 Mat.Bramar          Administration Assistant to CEO                    \n 2     2 Anda.Ribera         Administration Assistant to CFO                    \n 3     3 Rachel.Pantanal     Administration Assistant to CIO                    \n 4     4 Linda.Lagos         Administration Assistant to COO                    \n 5     5 Ruscella.Mies.Haber Administration Assistant to Engineering Group Mana…\n 6     6 Carla.Forluniau     Administration Assistant to IT Group Manager       \n 7     7 Cornelia.Lais       Administration Assistant to Security Group Manager \n 8    44 Kanon.Herrero       Security       Badging Office                      \n 9    45 Varja.Lagos         Security       Badging Office                      \n10    46 Stenig.Fusil        Security       Building Control                    \n# ℹ 44 more rows\n#\n# Edge Data: 1,372 × 4\n   from    to Weekday Weight\n  &lt;int&gt; &lt;int&gt; &lt;ord&gt;    &lt;int&gt;\n1     1     2 Sunday       5\n2     1     2 Monday       2\n3     1     2 Tuesday      3\n# ℹ 1,369 more rows"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#reviewing-the-output-tidygraphs-graph-object-1",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#reviewing-the-output-tidygraphs-graph-object-1",
+    "title": "Hands-on_Ex05",
+    "section": "3.4 Reviewing the output tidygraph’s graph object",
+    "text": "3.4 Reviewing the output tidygraph’s graph object\n\nThe output above reveals that GAStech_graph is a tbl_graph object with 54 nodes and 4541 edges.\nThe command also prints the first six rows of “Node Data” and the first three of “Edge Data”.\nIt states that the Node Data is active. The notion of an active tibble within a tbl_graph object makes it possible to manipulate the data in one tibble at a time."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#changing-the-active-object",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#changing-the-active-object",
+    "title": "Hands-on_Ex05",
+    "section": "3.5 Changing the active object",
+    "text": "3.5 Changing the active object\n\nGAStech_graph %&gt;%\n  activate(edges) %&gt;%\n  arrange(desc(Weight))\n\n# A tbl_graph: 54 nodes and 1372 edges\n#\n# A directed multigraph with 1 component\n#\n# Edge Data: 1,372 × 4 (active)\n    from    to Weekday   Weight\n   &lt;int&gt; &lt;int&gt; &lt;ord&gt;      &lt;int&gt;\n 1    40    41 Saturday      13\n 2    41    43 Monday        11\n 3    35    31 Tuesday       10\n 4    40    41 Monday        10\n 5    40    43 Monday        10\n 6    36    32 Sunday         9\n 7    40    43 Saturday       9\n 8    41    40 Monday         9\n 9    19    15 Wednesday      8\n10    35    38 Tuesday        8\n# ℹ 1,362 more rows\n#\n# Node Data: 54 × 4\n     id label           Department     Title           \n  &lt;dbl&gt; &lt;chr&gt;           &lt;chr&gt;          &lt;chr&gt;           \n1     1 Mat.Bramar      Administration Assistant to CEO\n2     2 Anda.Ribera     Administration Assistant to CFO\n3     3 Rachel.Pantanal Administration Assistant to CIO\n# ℹ 51 more rows"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#plotting-a-basic-network-graph",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#plotting-a-basic-network-graph",
+    "title": "Hands-on_Ex05",
+    "section": "4.1 Plotting a basic network graph",
+    "text": "4.1 Plotting a basic network graph\n\nggraph(GAStech_graph) +\n  geom_edge_link() +\n  geom_node_point()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#changing-the-default-network-graph-theme",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#changing-the-default-network-graph-theme",
+    "title": "Hands-on_Ex05",
+    "section": "4.2 Changing the default network graph theme",
+    "text": "4.2 Changing the default network graph theme\n\ng &lt;- ggraph(GAStech_graph) + \n  geom_edge_link(aes()) +\n  geom_node_point(aes())\n\ng + theme_graph()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#changing-the-coloring-of-the-plot",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#changing-the-coloring-of-the-plot",
+    "title": "Hands-on_Ex05",
+    "section": "4.3 Changing the coloring of the plot",
+    "text": "4.3 Changing the coloring of the plot\n\ng &lt;- ggraph(GAStech_graph) + \n  geom_edge_link(aes(colour = 'grey50')) +\n  geom_node_point(aes(colour = 'grey40'))\n\ng + theme_graph(background = 'grey10',\n                text_colour = 'white')"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#fruchterman-and-reingold-layout",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#fruchterman-and-reingold-layout",
+    "title": "Hands-on_Ex05",
+    "section": "4.4 Fruchterman and Reingold layout",
+    "text": "4.4 Fruchterman and Reingold layout\n\ng &lt;- ggraph(GAStech_graph, \n            layout = \"fr\") +\n  geom_edge_link(aes()) +\n  geom_node_point(aes())\n\ng + theme_graph()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#modifying-network-nodes",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#modifying-network-nodes",
+    "title": "Hands-on_Ex05",
+    "section": "4.5 Modifying network nodes",
+    "text": "4.5 Modifying network nodes\n\ng &lt;- ggraph(GAStech_graph, \n            layout = \"nicely\") + \n  geom_edge_link(aes()) +\n  geom_node_point(aes(colour = Department, \n                      size = 3))\n\ng + theme_graph()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#modifying-edges",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#modifying-edges",
+    "title": "Hands-on_Ex05",
+    "section": "4.6 Modifying edges",
+    "text": "4.6 Modifying edges\n\ng &lt;- ggraph(GAStech_graph, \n            layout = \"nicely\") +\n  geom_edge_link(aes(width=Weight), \n                 alpha=0.2) +\n  scale_edge_width(range = c(0.1, 5)) +\n  geom_node_point(aes(colour = Department), \n                  size = 3)\n\ng + theme_graph()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#working-with-facet_edges",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#working-with-facet_edges",
+    "title": "Hands-on_Ex05",
+    "section": "5.1 Working with facet_edges()",
+    "text": "5.1 Working with facet_edges()\n\nset_graph_style()\n\ng &lt;- ggraph(GAStech_graph, \n            layout = \"nicely\") + \n  geom_edge_link(aes(width=Weight), \n                 alpha=0.2) +\n  scale_edge_width(range = c(0.1, 5)) +\n  geom_node_point(aes(colour = Department), \n                  size = 2)\n\ng + facet_edges(~Weekday)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#working-with-facet_edges-1",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#working-with-facet_edges-1",
+    "title": "Hands-on_Ex05",
+    "section": "5.2 Working with facet_edges()",
+    "text": "5.2 Working with facet_edges()\n\nset_graph_style()\n\ng &lt;- ggraph(GAStech_graph, \n            layout = \"nicely\") + \n  geom_edge_link(aes(width=Weight), \n                 alpha=0.2) +\n  scale_edge_width(range = c(0.1, 5)) +\n  geom_node_point(aes(colour = Department), \n                  size = 2) +\n  theme(legend.position = 'bottom')\n  \ng + facet_edges(~Weekday)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#a-framed-facet-graph",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#a-framed-facet-graph",
+    "title": "Hands-on_Ex05",
+    "section": "5.3 A framed facet graph",
+    "text": "5.3 A framed facet graph\n\nset_graph_style() \n\ng &lt;- ggraph(GAStech_graph, \n            layout = \"nicely\") + \n  geom_edge_link(aes(width=Weight), \n                 alpha=0.2) +\n  scale_edge_width(range = c(0.1, 5)) +\n  geom_node_point(aes(colour = Department), \n                  size = 2)\n  \ng + facet_edges(~Weekday) +\n  th_foreground(foreground = \"grey80\",  \n                border = TRUE) +\n  theme(legend.position = 'bottom')"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#wroking-with-facet_nodes",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#wroking-with-facet_nodes",
+    "title": "Hands-on_Ex05",
+    "section": "5.4 Wroking with facet_nodes()",
+    "text": "5.4 Wroking with facet_nodes()\n\nset_graph_style()\n\ng &lt;- ggraph(GAStech_graph, \n            layout = \"nicely\") + \n  geom_edge_link(aes(width=Weight), \n                 alpha=0.2) +\n  scale_edge_width(range = c(0.1, 5)) +\n  geom_node_point(aes(colour = Department), \n                  size = 2)\n  \ng + facet_nodes(~Department)+\n  th_foreground(foreground = \"grey80\",  \n                border = TRUE) +\n  theme(legend.position = 'bottom')"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#computing-centrality-indices",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#computing-centrality-indices",
+    "title": "Hands-on_Ex05",
+    "section": "6.1 Computing centrality indices",
+    "text": "6.1 Computing centrality indices\n\ng &lt;- GAStech_graph %&gt;%\n  mutate(betweenness_centrality = centrality_betweenness()) %&gt;%\n  ggraph(layout = \"fr\") + \n  geom_edge_link(aes(width=Weight), \n                 alpha=0.2) +\n  scale_edge_width(range = c(0.1, 5)) +\n  geom_node_point(aes(colour = Department,\n            size=betweenness_centrality))\ng + theme_graph()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#visualising-network-metrics",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#visualising-network-metrics",
+    "title": "Hands-on_Ex05",
+    "section": "6.2 Visualising network metrics",
+    "text": "6.2 Visualising network metrics\n\ng &lt;- GAStech_graph %&gt;%\n  ggraph(layout = \"fr\") + \n  geom_edge_link(aes(width=Weight), \n                 alpha=0.2) +\n  scale_edge_width(range = c(0.1, 5)) +\n  geom_node_point(aes(colour = Department, \n                      size = centrality_betweenness()))\ng + theme_graph()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#visualising-community",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#visualising-community",
+    "title": "Hands-on_Ex05",
+    "section": "Visualising Community",
+    "text": "Visualising Community\n\ng &lt;- GAStech_graph %&gt;%\n  mutate(community = as.factor(\n    group_edge_betweenness(\n      weights = Weight, \n      directed = TRUE))) %&gt;%\n  ggraph(layout = \"fr\") + \n  geom_edge_link(\n    aes(\n      width=Weight), \n    alpha=0.2) +\n  scale_edge_width(\n    range = c(0.1, 5)) +\n  geom_node_point(\n    aes(colour = community))  \n\ng + theme_graph()\n\n\n\n\n\n\n\n\n\ng &lt;- GAStech_graph %&gt;%\n  activate(nodes) %&gt;%\n  mutate(community = as.factor(\n    group_optimal(weights = Weight)),\n         betweenness_measure = centrality_betweenness()) %&gt;%\n  ggraph(layout = \"fr\") +\n  geom_mark_hull(\n    aes(x, y, \n        group = community, \n        fill = community),  \n    alpha = 0.2,  \n    expand = unit(0.3, \"cm\"),  # Expand\n    radius = unit(0.3, \"cm\")  # Smoothness\n  ) + \n  geom_edge_link(aes(width=Weight), \n                 alpha=0.2) +\n  scale_edge_width(range = c(0.1, 5)) +\n  geom_node_point(aes(fill = Department,\n                      size = betweenness_measure),\n                      color = \"black\",\n                      shape = 21)\n  \ng + theme_graph()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#data-preparation",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#data-preparation",
+    "title": "Hands-on_Ex05",
+    "section": "7.1 Data Preparation",
+    "text": "7.1 Data Preparation\n\nGAStech_edges_aggregated &lt;- GAStech_edges %&gt;%\n  left_join(GAStech_nodes, by = c(\"sourceLabel\" = \"label\")) %&gt;%\n  rename(from = id) %&gt;%\n  left_join(GAStech_nodes, by = c(\"targetLabel\" = \"label\")) %&gt;%\n  rename(to = id) %&gt;%\n  filter(MainSubject == \"Work related\") %&gt;%\n  group_by(from, to) %&gt;%\n    summarise(weight = n()) %&gt;%\n  filter(from!=to) %&gt;%\n  filter(weight &gt; 1) %&gt;%\n  ungroup()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#plotting-the-first-interactive-network-graph",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#plotting-the-first-interactive-network-graph",
+    "title": "Hands-on_Ex05",
+    "section": "7.2 Plotting the first interactive network graph",
+    "text": "7.2 Plotting the first interactive network graph\n\nvisNetwork(GAStech_nodes, \n           GAStech_edges_aggregated)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#working-with-layout",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#working-with-layout",
+    "title": "Hands-on_Ex05",
+    "section": "7.3 Working with layout",
+    "text": "7.3 Working with layout\n\nvisNetwork(GAStech_nodes,\n           GAStech_edges_aggregated) %&gt;%\n  visIgraphLayout(layout = \"layout_with_fr\")"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#working-with-visual-attributes---nodes",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#working-with-visual-attributes---nodes",
+    "title": "Hands-on_Ex05",
+    "section": "7.4 Working with visual attributes - Nodes",
+    "text": "7.4 Working with visual attributes - Nodes\n\nGAStech_nodes &lt;- GAStech_nodes %&gt;%\n  rename(group = Department)\n\n\nvisNetwork(GAStech_nodes,\n           GAStech_edges_aggregated) %&gt;%\n  visIgraphLayout(layout = \"layout_with_fr\") %&gt;%\n  visLegend() %&gt;%\n  visLayout(randomSeed = 123)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#working-with-visual-attributes---edges",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#working-with-visual-attributes---edges",
+    "title": "Hands-on_Ex05",
+    "section": "7.5 Working with visual attributes - Edges",
+    "text": "7.5 Working with visual attributes - Edges\n\nvisNetwork(GAStech_nodes,\n           GAStech_edges_aggregated) %&gt;%\n  visIgraphLayout(layout = \"layout_with_fr\") %&gt;%\n  visEdges(arrows = \"to\", \n           smooth = list(enabled = TRUE, \n                         type = \"curvedCW\")) %&gt;%\n  visLegend() %&gt;%\n  visLayout(randomSeed = 123)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#interactivity",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#interactivity",
+    "title": "Hands-on_Ex05",
+    "section": "7.6 Interactivity",
+    "text": "7.6 Interactivity\n\nvisNetwork(GAStech_nodes,\n           GAStech_edges_aggregated) %&gt;%\n  visIgraphLayout(layout = \"layout_with_fr\") %&gt;%\n  visOptions(highlightNearest = TRUE,\n             nodesIdSelection = TRUE) %&gt;%\n  visLegend() %&gt;%\n  visLayout(randomSeed = 123)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#loading-the-r-packages",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#loading-the-r-packages",
+    "title": "Hands-on_Ex03_2",
+    "section": "1. Loading the R packages",
+    "text": "1. Loading the R packages\n\nplotly: R library for plotting interactive statistical graphs.\ngganimate: An ggplot extension for creating animated statistical graphs.\ngifski: To convert video frames to GIF animations.\ngapminder: An excerpt of the data available at Gapminder.org. We just want to use its country_colors scheme.\ntidyverse: A family of modern R packages specially designed to support data science, analysis and communication task.\nreadxl: An R package used to read .xls and .xlsx into R.\n\n\npacman::p_load(plotly, gganimate, gifski, gapminder, tidyverse, readxl)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#importing-the-data",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#importing-the-data",
+    "title": "Hands-on_Ex03_2",
+    "section": "2. Importing the data",
+    "text": "2. Importing the data\n\ncol &lt;- c(\"Country\", \"Continent\")\n# to create a character vector containing the values \"Country\", \"Continent\"\n\nglobalPop &lt;- read_xls(\"GlobalPopulation.xls\", sheet=\"Data\") %&gt;%\n# %&gt;% is the pipe operator in R, it passes the result of one function into the next\n  \n  mutate(across(all_of(col), as.factor)) %&gt;%\n  # mutate(): to add or change columns in a data frame\n  # across(col, as.factor): to convert the col to factor type\n  # mutate_at() also can be used here\n  \n  mutate(Year = as.integer(Year))\n  # convert year to integer"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#building-a-static-poplulation-bubble-plot",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#building-a-static-poplulation-bubble-plot",
+    "title": "Hands-on_Ex03_2",
+    "section": "1. Building a static poplulation bubble plot",
+    "text": "1. Building a static poplulation bubble plot\n\nggplot(globalPop, aes(x = Old, y = Young, size = Population, colour = Country)) +\n  geom_point(alpha = 0.7, show.legend = FALSE) +\n  scale_colour_manual(values = country_colors) +\n  scale_size(range = c(2, 12)) +\n  labs(title = 'Year: {frame_time}', x = '% Aged', y = '% Young')"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#building-the-animated-bubble-plot",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#building-the-animated-bubble-plot",
+    "title": "Hands-on_Ex03_2",
+    "section": "2. Building the animated bubble plot",
+    "text": "2. Building the animated bubble plot\n\ntransition_time() is used to create transition through distinct states in time (i.e. Year)\nease_aes() is used to control easing of aesthetics. The default is linear. Other methods are as the following:\n\nquadratic\ncubic\nquartic\nquintic\nsine\ncircular\nexponential\nelastic\nback\nbounce\n\nview_*(): to control the panel behavior\nshadow_*(): to keep traces of previous or future frames\nenter_*()/exit_*() : to define how elements appear and disappear\n\n\nggplot(globalPop, aes(x = Old, y = Young, size = Population, colour = Country)) +\n  geom_point(alpha = 0.7, show.legend = FALSE) +\n  scale_colour_manual(values = country_colors) +\n  scale_size(range = c(2, 12)) +\n  labs(title = 'Year: {frame_time}', x = '% Aged', y = '% Young') +\n  \n  transition_time(Year) +       \n  ease_aes('linear') + \n  view_follow(fixed_y = TRUE) + \n  # follow the data horizontally\n  shadow_mark(past = TRUE, future = FALSE, alpha = 0.2) +\n  # keep traces of previous frames\n  enter_fade() + exit_shrink()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#building-an-animated-bubble-plot-ggploy",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#building-an-animated-bubble-plot-ggploy",
+    "title": "Hands-on_Ex03_2",
+    "section": "1. Building an animated bubble plot: ggploy()",
+    "text": "1. Building an animated bubble plot: ggploy()\n“show.legend = FALSE” doesn’t work here, so here needs to use “theme(legend.position=‘none’)”\n\ngg &lt;- ggplot(globalPop, aes(x = Old, y = Young, size = Population,\n                            colour = Country)) +\n  geom_point(aes(size = Population, frame = Year), alpha = 0.7,\n             show.legend = FALSE) +\n  scale_colour_manual(values = country_colors) +\n  scale_size(range = c(2, 12)) +\n  labs(x = '% Aged', y = '% Young') + \n  theme(legend.position='none')\n\nggplotly(gg)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#building-an-animated-bubble-plot-plot_ly",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#building-an-animated-bubble-plot-plot_ly",
+    "title": "Hands-on_Ex03_2",
+    "section": "2. Building an animated bubble plot: plot_ly()",
+    "text": "2. Building an animated bubble plot: plot_ly()\n\nbp &lt;- globalPop %&gt;%\n  \n  plot_ly(x = ~Old, y = ~Young, size = ~Population, color = ~Continent,\n          sizes = c(2, 100), frame = ~Year, text = ~Country, hoverinfo = \"text\",\n          type = 'scatter', mode = 'markers') %&gt;%\n  \n  layout(showlegend = FALSE)\n\nbp"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_1.html",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_1.html",
+    "title": "Hands-on_Ex04_1",
     "section": "",
-    "text": "pacman::p_load(ggrepel,\n               ggthemes,\n               hrbrthemes,\n               patchwork,\n               tidyverse)\n\n\n\n\n\nexam_data&lt;-read_csv(\"Exam_data.csv\")\n\nRows: 322 Columns: 7\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (4): ID, CLASS, GENDER, RACE\ndbl (3): ENGLISH, MATHS, SCIENCE\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\n\n\n\n\n\n\n\n\nggplot(data=exam_data,\n       aes(x=MATHS,\n           y=ENGLISH))+\n  geom_point()+\n  geom_smooth(method = lm,\n              linewidth=0.5)+\n  geom_label(aes(label=ID),\n             hjust=.5,\n             vjust=-.5)+\n  coord_cartesian(xlim = c(0,100),\n                  ylim = c(0,100))+\n  ggtitle(\"English scores versus Maths scores for primary 3\")\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nggplot(data=exam_data,\n       aes(x=MATHS,\n           y=ENGLISH))+\n  geom_point()+\n  geom_smooth(method = lm,\n              linewidth=0.5)+\n  geom_label_repel(aes(label = ID),\n                   fontface = \"bold\")+\n  coord_cartesian(xlim = c(0,100),\n                  ylim = c(0,100))+\n  ggtitle(\"English scores versus Maths scores for primary 3\")\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\nWarning: ggrepel: 317 unlabeled data points (too many overlaps). Consider\nincreasing max.overlaps\n\n\n\n\n\n\n\n\n\n\n\n\n\nggplot(data=exam_data,\n       aes(x=MATHS,\n           y=ENGLISH))+\n  geom_point()+\n  geom_smooth(method = lm,\n              linewidth=0.5)+\n  geom_text_repel(aes(label = ID),\n                   fontface = \"bold\",\n                  size = 3.5,\n                  color = \"blue\")+\n  coord_cartesian(xlim = c(0,100),\n                  ylim = c(0,100))+\n  ggtitle(\"English scores versus Maths scores for primary 3\")\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\nWarning: ggrepel: 302 unlabeled data points (too many overlaps). Consider\nincreasing max.overlaps\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nggplot(data = exam_data,\n       aes(x = MATHS)) +\n  geom_histogram(bins = 20,\n                 boundary = 100,\n                 color = \"white\",\n                 fill = \"grey\")+\n  ggtitle(\"Distribution of Maths scores\")+\n  theme_wsj()+\n  theme(plot.title = element_text(size = 20))\n\n\n\n\n\n\n\n\n\n\n\n\nggplot(data = exam_data,\n       aes(x = MATHS)) +\n  geom_histogram(bins = 20,\n                 boundary = 100,\n                 color = \"white\",\n                 fill = \"grey\")+\n  ggtitle(\"Distribution of Maths scores\")+\n  theme_ipsum(axis_title_size = 15,\n              base_size = 15,\n              grid = \"N\")\n\n\n\n\n\n\n\n\n\n\n\n\n\n\np1&lt;-ggplot(data = exam_data,\n           aes(x=MATHS))+\n  geom_histogram(bins=20,\n                 boundary=100,\n                 color=\"grey25\",\n                 fill=\"grey90\")+\n  coord_cartesian(xlim=c(0,100))+\n  ggtitle(\"Distribution of Maths Scores\")\np1\n\n\n\n\n\n\n\n\n\np2&lt;-ggplot(data = exam_data,\n           aes(x=ENGLISH))+\n  geom_histogram(bins=20,\n                 boundary=100,\n                 color=\"grey25\",\n                 fill=\"grey90\")+\n  coord_cartesian(xlim=c(0,100))+\n  ggtitle(\"Distribution of English Scores\")\np2\n\n\n\n\n\n\n\n\n\np3&lt;-ggplot(data = exam_data,\n           aes(x=MATHS,\n               y=ENGLISH))+\n  geom_point()+\n  geom_smooth(method=lm,\n              size=0.5)+\n  coord_cartesian(xlim = c(0,100),\n                  ylim = c(0,100))+\n  ggtitle(\"English scores versus Maths scores for Primary 3\")\n\nWarning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.\nℹ Please use `linewidth` instead.\n\np3\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\n\n\n\n\np1+p2\n\n\n\n\n\n\n\n\n\n\n\n\n“/” operator to stack two ggplot2 graphs\n“|” operator to place the plots beside each other\n“()” operator the define the sequence of the plotting\n\n\n(p1 / p2) | p3\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\n\n\n\n((p1 / p2) | p3) + \n  plot_annotation(tag_levels = 'I')\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\n\n\n\n\np3 + inset_element(p2, \n                   left = 0.02, \n                   bottom = 0.7, \n                   right = 0.5, \n                   top = 1)\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\n\n\n\n\npatchwork &lt;- (p1 / p2) | p3\npatchwork & theme_wsj()+theme(plot.title = element_text(size = 6))\n\n`geom_smooth()` using formula = 'y ~ x'"
+    "text": "ggridges, a ggplot2 extension specially designed for plotting ridgeline plots\nggdist, a ggplot2 extension specially desgin for visualising distribution and uncertainty\ncolorspace, an R package provides a broad toolbox for selecting individual colors or color palettes, manipulating these colors, and employing them in various kinds of visualisations.\n\n\npacman::p_load(ggdist, ggridges, ggthemes, colorspace, tidyverse)\n\n\n\n\n\nexam &lt;- read_csv(\"Exam_data.csv\")\n\n\n\n\n\n\n\nggridges package provides two main geom to plot gridgeline plots:\n\ngeom_ridgeline(): takes height values directly to draw the ridgelines.\ngeom_density_ridges(): estimates data densities first and then draws those using ridgelines.\n\n\nggplot(exam, aes(x = ENGLISH, y = CLASS)) +\n  geom_density_ridges(scale = 3, rel_min_height = 0.01,\n                      bandwidth = 3.4,\n                      fill = lighten(\"#7097BB\", .3),\n                      color = \"white\") +\n  scale_x_continuous(name = \"English grades\",expand = c(0, 0)) +\n  scale_y_discrete(name = NULL, \n                   expand = expansion(add = c(0.2, 2.6))) +\n  theme_ridges()\n\n\n\n\n\n\n\n\n\n\n\ngeom_ridgeline_gradient() or geom_density_ridges_gradient() can be used to vary fill color along the x axis. However, they do not allow for alpha transparency in the fill. For technical reasons, we can have changing fill colors or transparency but not both.\n\nggplot(exam, aes(x = ENGLISH, y = CLASS, fill = stat(x))) +\n  geom_density_ridges_gradient(scale = 3,\n                               rel_min_height = 0.01) +\n  scale_fill_viridis_c(name = \"Temp. [F]\", option = \"C\") +\n  scale_x_continuous(name = \"English grades\",\n                     expand = c(0, 0)) +\n  scale_y_discrete(name = NULL, \n                   expand = expansion(add = c(0.2, 2.6))) +\n  theme_ridges()\n\n\n\n\n\n\n\n\n\n\n\n\n\nggplot(exam, aes(x = ENGLISH, y = CLASS,\n                 fill = 0.5 - abs(0.5-stat(ecdf)))) +\n  stat_density_ridges(geom = \"density_ridges_gradient\",\n                      calc_ecdf = TRUE) +\n  scale_fill_viridis_c(name = \"Tail probability\", \n                       direction = -1) +\n  theme_ridges()\n\n\n\n\n\n\n\n\n\n\n\nBy using geom_density_ridges_gradient(), we can colour the ridgeline plot by quantile.\n\nggplot(exam, aes(x = ENGLISH, y = CLASS,\n                 fill = factor(stat(quantile)))) +\n  stat_density_ridges(geom = \"density_ridges_gradient\",\n                      calc_ecdf = TRUE, quantiles = 4,\n                      quantile_lines = TRUE) +\n  scale_fill_viridis_d(name = \"Quartiles\") +\n  theme_ridges()\n\n\n\n\n\n\n\n\nwe can also specify quantiles by cut points such as 10% and 90% tails to colour the ridgeline plot as shown in the figure below.\n\nggplot(exam, aes(x = ENGLISH, y = CLASS, \n                 fill = factor(stat(quantile)))) +\n  stat_density_ridges(geom = \"density_ridges_gradient\",\n                      calc_ecdf = TRUE, \n                      quantiles = c(0.100, 0.900)) +\n  scale_fill_manual(name = \"Probability\", values = c(\"#FF0000A0\", \"#A0A0A0A0\", \"#0000FFA0\"), labels = c(\"(0, 0.100]\", \"(0.100, 0.900]\", \"(0.900, 1]\")) +\n  theme_ridges()\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nggplot(exam, aes(x = RACE, y = ENGLISH)) +\n  stat_halfeye(adjust = 0.5, justification = -0.2,\n               .width = 0, point_colour = NA)\n\n\n\n\n\n\n\n\n\n\n\n\nggplot(exam, aes(x = RACE, y = ENGLISH)) +\n  stat_halfeye(adjust = 0.5, justification = -0.2,\n               .width = 0, point_colour = NA) +\n  geom_boxplot(width = .20, outlier.shape = NA)\n\n\n\n\n\n\n\n\n\n\n\n\nggplot(exam, aes(x = RACE, y = ENGLISH)) +\n  stat_halfeye(adjust = 0.5, justification = -0.2,\n               .width = 0, point_colour = NA) +\n  geom_boxplot(width = .20, outlier.shape = NA) +\n  stat_dots(side = \"left\", justification = 1.2, \n            binwidth = .5, dotsize = 2)\n\n\n\n\n\n\n\n\n\n\n\ncoord_flip() of ggplot2 package can be used to flip the raincloud chart horizontally. Besides, themes in the ggthemes package can be used to give the raincloud chart a professional publishing standard look.\n\nggplot(exam, aes(x = RACE, y = ENGLISH)) +\n  stat_halfeye(adjust = 0.5, justification = -0.2,\n               .width = 0, point_colour = NA) +\n  geom_boxplot(width = .20, outlier.shape = NA) +\n  stat_dots(side = \"left\", justification = 1.2, \n            binwidth = .5, dotsize = 1.5) +\n  coord_flip() + theme_wsj()"
   },
   {
-    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#data-preparation",
-    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#data-preparation",
-    "title": "Hands-on_Ex02",
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_1.html#getting-started",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_1.html#getting-started",
+    "title": "Hands-on_Ex04_1",
     "section": "",
-    "text": "pacman::p_load(ggrepel,\n               ggthemes,\n               hrbrthemes,\n               patchwork,\n               tidyverse)\n\n\n\n\n\nexam_data&lt;-read_csv(\"Exam_data.csv\")\n\nRows: 322 Columns: 7\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (4): ID, CLASS, GENDER, RACE\ndbl (3): ENGLISH, MATHS, SCIENCE\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message."
+    "text": "ggridges, a ggplot2 extension specially designed for plotting ridgeline plots\nggdist, a ggplot2 extension specially desgin for visualising distribution and uncertainty\ncolorspace, an R package provides a broad toolbox for selecting individual colors or color palettes, manipulating these colors, and employing them in various kinds of visualisations.\n\n\npacman::p_load(ggdist, ggridges, ggthemes, colorspace, tidyverse)\n\n\n\n\n\nexam &lt;- read_csv(\"Exam_data.csv\")"
   },
   {
-    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#ggrepel-to-repel-overlapping-text",
-    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#ggrepel-to-repel-overlapping-text",
-    "title": "Hands-on_Ex02",
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_1.html#visualizing-distribution-with-ridgeline-plot",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_1.html#visualizing-distribution-with-ridgeline-plot",
+    "title": "Hands-on_Ex04_1",
     "section": "",
-    "text": "ggplot(data=exam_data,\n       aes(x=MATHS,\n           y=ENGLISH))+\n  geom_point()+\n  geom_smooth(method = lm,\n              linewidth=0.5)+\n  geom_label(aes(label=ID),\n             hjust=.5,\n             vjust=-.5)+\n  coord_cartesian(xlim = c(0,100),\n                  ylim = c(0,100))+\n  ggtitle(\"English scores versus Maths scores for primary 3\")\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nggplot(data=exam_data,\n       aes(x=MATHS,\n           y=ENGLISH))+\n  geom_point()+\n  geom_smooth(method = lm,\n              linewidth=0.5)+\n  geom_label_repel(aes(label = ID),\n                   fontface = \"bold\")+\n  coord_cartesian(xlim = c(0,100),\n                  ylim = c(0,100))+\n  ggtitle(\"English scores versus Maths scores for primary 3\")\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\nWarning: ggrepel: 317 unlabeled data points (too many overlaps). Consider\nincreasing max.overlaps\n\n\n\n\n\n\n\n\n\n\n\n\n\nggplot(data=exam_data,\n       aes(x=MATHS,\n           y=ENGLISH))+\n  geom_point()+\n  geom_smooth(method = lm,\n              linewidth=0.5)+\n  geom_text_repel(aes(label = ID),\n                   fontface = \"bold\",\n                  size = 3.5,\n                  color = \"blue\")+\n  coord_cartesian(xlim = c(0,100),\n                  ylim = c(0,100))+\n  ggtitle(\"English scores versus Maths scores for primary 3\")\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\nWarning: ggrepel: 302 unlabeled data points (too many overlaps). Consider\nincreasing max.overlaps"
+    "text": "ggridges package provides two main geom to plot gridgeline plots:\n\ngeom_ridgeline(): takes height values directly to draw the ridgelines.\ngeom_density_ridges(): estimates data densities first and then draws those using ridgelines.\n\n\nggplot(exam, aes(x = ENGLISH, y = CLASS)) +\n  geom_density_ridges(scale = 3, rel_min_height = 0.01,\n                      bandwidth = 3.4,\n                      fill = lighten(\"#7097BB\", .3),\n                      color = \"white\") +\n  scale_x_continuous(name = \"English grades\",expand = c(0, 0)) +\n  scale_y_discrete(name = NULL, \n                   expand = expansion(add = c(0.2, 2.6))) +\n  theme_ridges()\n\n\n\n\n\n\n\n\n\n\n\ngeom_ridgeline_gradient() or geom_density_ridges_gradient() can be used to vary fill color along the x axis. However, they do not allow for alpha transparency in the fill. For technical reasons, we can have changing fill colors or transparency but not both.\n\nggplot(exam, aes(x = ENGLISH, y = CLASS, fill = stat(x))) +\n  geom_density_ridges_gradient(scale = 3,\n                               rel_min_height = 0.01) +\n  scale_fill_viridis_c(name = \"Temp. [F]\", option = \"C\") +\n  scale_x_continuous(name = \"English grades\",\n                     expand = c(0, 0)) +\n  scale_y_discrete(name = NULL, \n                   expand = expansion(add = c(0.2, 2.6))) +\n  theme_ridges()"
   },
   {
-    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#ggthemes",
-    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#ggthemes",
-    "title": "Hands-on_Ex02",
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_1.html#mapping-the-probabilities-directly-onto-colour-stat_density_ridges",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_1.html#mapping-the-probabilities-directly-onto-colour-stat_density_ridges",
+    "title": "Hands-on_Ex04_1",
     "section": "",
-    "text": "ggplot(data = exam_data,\n       aes(x = MATHS)) +\n  geom_histogram(bins = 20,\n                 boundary = 100,\n                 color = \"white\",\n                 fill = \"grey\")+\n  ggtitle(\"Distribution of Maths scores\")+\n  theme_wsj()+\n  theme(plot.title = element_text(size = 20))"
+    "text": "ggplot(exam, aes(x = ENGLISH, y = CLASS,\n                 fill = 0.5 - abs(0.5-stat(ecdf)))) +\n  stat_density_ridges(geom = \"density_ridges_gradient\",\n                      calc_ecdf = TRUE) +\n  scale_fill_viridis_c(name = \"Tail probability\", \n                       direction = -1) +\n  theme_ridges()"
   },
   {
-    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#hrbrthemes",
-    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#hrbrthemes",
-    "title": "Hands-on_Ex02",
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_1.html#ridgeline-plots-with-quantile-lines",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_1.html#ridgeline-plots-with-quantile-lines",
+    "title": "Hands-on_Ex04_1",
     "section": "",
-    "text": "ggplot(data = exam_data,\n       aes(x = MATHS)) +\n  geom_histogram(bins = 20,\n                 boundary = 100,\n                 color = \"white\",\n                 fill = \"grey\")+\n  ggtitle(\"Distribution of Maths scores\")+\n  theme_ipsum(axis_title_size = 15,\n              base_size = 15,\n              grid = \"N\")"
+    "text": "By using geom_density_ridges_gradient(), we can colour the ridgeline plot by quantile.\n\nggplot(exam, aes(x = ENGLISH, y = CLASS,\n                 fill = factor(stat(quantile)))) +\n  stat_density_ridges(geom = \"density_ridges_gradient\",\n                      calc_ecdf = TRUE, quantiles = 4,\n                      quantile_lines = TRUE) +\n  scale_fill_viridis_d(name = \"Quartiles\") +\n  theme_ridges()\n\n\n\n\n\n\n\n\nwe can also specify quantiles by cut points such as 10% and 90% tails to colour the ridgeline plot as shown in the figure below.\n\nggplot(exam, aes(x = ENGLISH, y = CLASS, \n                 fill = factor(stat(quantile)))) +\n  stat_density_ridges(geom = \"density_ridges_gradient\",\n                      calc_ecdf = TRUE, \n                      quantiles = c(0.100, 0.900)) +\n  scale_fill_manual(name = \"Probability\", values = c(\"#FF0000A0\", \"#A0A0A0A0\", \"#0000FFA0\"), labels = c(\"(0, 0.100]\", \"(0.100, 0.900]\", \"(0.900, 1]\")) +\n  theme_ridges()"
   },
   {
-    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#pathwork-to-combine-single-graphs",
-    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#pathwork-to-combine-single-graphs",
-    "title": "Hands-on_Ex02",
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_1.html#visualising-distribution-with-raincloud-plot",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_1.html#visualising-distribution-with-raincloud-plot",
+    "title": "Hands-on_Ex04_1",
     "section": "",
-    "text": "p1&lt;-ggplot(data = exam_data,\n           aes(x=MATHS))+\n  geom_histogram(bins=20,\n                 boundary=100,\n                 color=\"grey25\",\n                 fill=\"grey90\")+\n  coord_cartesian(xlim=c(0,100))+\n  ggtitle(\"Distribution of Maths Scores\")\np1\n\n\n\n\n\n\n\n\n\np2&lt;-ggplot(data = exam_data,\n           aes(x=ENGLISH))+\n  geom_histogram(bins=20,\n                 boundary=100,\n                 color=\"grey25\",\n                 fill=\"grey90\")+\n  coord_cartesian(xlim=c(0,100))+\n  ggtitle(\"Distribution of English Scores\")\np2\n\n\n\n\n\n\n\n\n\np3&lt;-ggplot(data = exam_data,\n           aes(x=MATHS,\n               y=ENGLISH))+\n  geom_point()+\n  geom_smooth(method=lm,\n              size=0.5)+\n  coord_cartesian(xlim = c(0,100),\n                  ylim = c(0,100))+\n  ggtitle(\"English scores versus Maths scores for Primary 3\")\n\nWarning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.\nℹ Please use `linewidth` instead.\n\np3\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\n\n\n\n\np1+p2\n\n\n\n\n\n\n\n\n\n\n\n\n“/” operator to stack two ggplot2 graphs\n“|” operator to place the plots beside each other\n“()” operator the define the sequence of the plotting\n\n\n(p1 / p2) | p3\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\n\n\n\n((p1 / p2) | p3) + \n  plot_annotation(tag_levels = 'I')\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\n\n\n\n\np3 + inset_element(p2, \n                   left = 0.02, \n                   bottom = 0.7, \n                   right = 0.5, \n                   top = 1)\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\n\n\n\n\npatchwork &lt;- (p1 / p2) | p3\npatchwork & theme_wsj()+theme(plot.title = element_text(size = 6))\n\n`geom_smooth()` using formula = 'y ~ x'"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#loading-packages",
-    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#loading-packages",
-    "title": "Hands-on Exercise 3-1",
-    "section": "1. Loading packages",
-    "text": "1. Loading packages\nPackages Introduction\n\nggiraph: to make ggplot graphics interactive\nplotly: to plot interactive statistical graphs\nDT: to provide an R interface to the JavaScript library DataTables to create interactive table on html page\ntidyverse: a family of modern R packages specially designed to support data science, analysis and communication task\npatchwork: to combine multiple ggplot2 graphs into one figure\n\n\npacman::p_load(ggiraph, plotly, patchwork, DT, tidyverse)"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#importing-data",
-    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#importing-data",
-    "title": "Hands-on Exercise 3-1",
-    "section": "2. Importing data",
-    "text": "2. Importing data\n\nexam_data&lt;-read_csv(\"Exam_data.csv\")"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#tooltip",
-    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#tooltip",
-    "title": "Hands-on Exercise 3-1",
-    "section": "1. tooltip",
-    "text": "1. tooltip\nTooltip’s function is to display the information when the mouse is over elements.\n\n(1) Displaying one information on tooltip\n\np &lt;- ggplot(data=exam_data, aes(x = MATHS)) +\n  geom_dotplot_interactive(aes(tooltip = ID), stackgroups = TRUE, \n                           binwidth = 1, method = \"histodot\") +\n  scale_y_continuous(NULL, breaks = NULL)\n\ngirafe(ggobj = p, width_svg = 6, height_svg = 6*0.618)\n\n\n\n\n\n\n\n(2) Displaying multiple information on tooltip\n\nexam_data$tooltip &lt;- paste0(\"Name = \", exam_data$ID,\"\\n CLASS = \", exam_data$CLASS)\n# create a new field called tooltip, including ID and CLASS.\n# paste0(): to concatenate strings\n\np &lt;- ggplot(data=exam_data, aes(x = MATHS)) +\n  geom_dotplot_interactive(aes(tooltip = exam_data$tooltip),\n                           stackgroups = TRUE, binwidth = 1, \n                           method = \"histodot\") +\n  scale_y_continuous(NULL, breaks = NULL)\n\ngirafe(ggobj = p, width_svg = 6, height_svg = 6*0.618)\n\n\n\n\n\n\n\n(3) Customising Tooltip style\n\ntooltip_css &lt;- \"background-color:white; font-style:bold; color:black;\" \n\np &lt;- ggplot(data=exam_data, aes(x = MATHS)) +\n  geom_dotplot_interactive(aes(tooltip = ID), stackgroups = TRUE, binwidth = 1, method = \"histodot\") +\n  scale_y_continuous(NULL, breaks = NULL)\n\ngirafe(ggobj = p, width_svg = 6, height_svg = 6*0.618,\n  options = list(opts_tooltip(css = tooltip_css))) \n\n\n\n\n\n\n\n(4) Displaying statistics on tooltip\n\ntooltip &lt;- function(y, ymax, accuracy = .01) {\n  mean &lt;- scales::number(y, accuracy = accuracy)\n  sem &lt;- scales::number(ymax - y, accuracy = accuracy)\n  paste(\"Mean maths scores:\", mean, \"+/-\", sem)\n}\n\ngg_point &lt;- ggplot(data=exam_data, \n                   aes(x = RACE)) +\n  stat_summary(aes(y = MATHS, tooltip = after_stat(tooltip(y, ymax))),  \n    fun.data = \"mean_se\", geom = GeomInteractiveCol,fill = \"light pink\") +\n  stat_summary(aes(y = MATHS),fun.data = mean_se,geom = \"errorbar\", width = 0.2, size = 0.2)\n\ngirafe(ggobj = gg_point, width_svg = 8, height_svg = 8*0.618)"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#data_id",
-    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#data_id",
-    "title": "Hands-on Exercise 3-1",
-    "section": "2. Data_id",
-    "text": "2. Data_id\nData_id is used to assign a unique identifier to each graphic element. In this case, elements associated with a data_id will be highlighted upon mouse over.\n\np &lt;- ggplot(data=exam_data, aes(x = MATHS)) +\n  geom_dotplot_interactive(aes(data_id = CLASS), stackgroups = TRUE, binwidth = 1, method = \"histodot\") +\n  scale_y_continuous(NULL, breaks = NULL)\n\ngirafe(ggobj = p, width_svg = 6, height_svg = 6*0.618)\n\n\n\n\n\n\n(1)Styling hover effect\n\np &lt;- ggplot(data=exam_data, aes(x = MATHS)) +\n  geom_dotplot_interactive(aes(data_id = CLASS), stackgroups = TRUE, binwidth = 1, method = \"histodot\") +               \n  scale_y_continuous(NULL, breaks = NULL)\n\ngirafe(ggobj = p,width_svg = 6,height_svg = 6*0.618,\n  options = list(opts_hover(css = \"fill: #202020;\"), opts_hover_inv(css = \"opacity:0.2;\")))                                        \n\n\n\n\n\n\n\n(2) Combing tooltip and hover effect\n\np &lt;- ggplot(data=exam_data, aes(x = MATHS)) +\n  geom_dotplot_interactive(aes(tooltip=CLASS,data_id = CLASS), stackgroups = TRUE, binwidth = 1, method = \"histodot\") +               \n  scale_y_continuous(NULL, breaks = NULL)\n\ngirafe(ggobj = p,width_svg = 6,height_svg = 6*0.618,\n  options = list(opts_hover(css = \"fill: #202020;\"), opts_hover_inv(css = \"opacity:0.2;\")))"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#onclick",
-    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#onclick",
-    "title": "Hands-on Exercise 3-1",
-    "section": "3. Onclick",
-    "text": "3. Onclick\nOnclick is to define a JavaScript action that happens when the user clicks on a visual element.\n\nexam_data$onclick &lt;- sprintf(\"window.open(\\\"%s%s\\\")\",\n\"https://www.moe.gov.sg/schoolfinder?journey=Primary%20school\",\nas.character(exam_data$ID))\n\np &lt;- ggplot(data=exam_data, aes(x = MATHS)) +\n  geom_dotplot_interactive(aes(onclick = onclick), stackgroups = TRUE, binwidth = 1, method = \"histodot\") +\n  scale_y_continuous(NULL, breaks = NULL)\n\ngirafe(ggobj = p, width_svg = 6, height_svg = 6*0.618)"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#coordinate-multiple-views-with-ggiraph",
-    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#coordinate-multiple-views-with-ggiraph",
-    "title": "Hands-on Exercise 3-1",
-    "section": "4. Coordinate multiple views with ggiraph",
-    "text": "4. Coordinate multiple views with ggiraph\nTo achieve this, appropriate interactive functions of ggiraph will be used to create the multiple views, and patchwork function will be used inside girafe function to coordinate multiple views.\n\np1 &lt;- ggplot(data=exam_data, aes(x = MATHS)) +\n  geom_dotplot_interactive(aes(data_id = ID), stackgroups = TRUE, binwidth = 1, method = \"histodot\") +  \n  coord_cartesian(xlim=c(0,100)) + \n  scale_y_continuous(NULL, breaks = NULL)\n\np2 &lt;- ggplot(data=exam_data, aes(x = ENGLISH)) +\n  geom_dotplot_interactive(aes(data_id = ID), stackgroups = TRUE, binwidth = 1, method = \"histodot\") +  \n  coord_cartesian(xlim=c(0,100)) + \n  scale_y_continuous(NULL, breaks = NULL)\n\ngirafe(code = print(p1 + p2), width_svg = 6, height_svg = 3, \n       options = list(opts_hover(css = \"fill: #202020;\"), \n              opts_hover_inv(css = \"opacity:0.2;\")))"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#plot_ly-method",
-    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#plot_ly-method",
-    "title": "Hands-on Exercise 3-1",
-    "section": "1. plot_ly() method",
-    "text": "1. plot_ly() method\n\nplot_ly(data = exam_data, x = ~MATHS, y = ~ENGLISH, color = ~RACE)"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#ggplotly-method",
-    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#ggplotly-method",
-    "title": "Hands-on Exercise 3-1",
-    "section": "2. ggplotly() method",
-    "text": "2. ggplotly() method\n\np &lt;- ggplot(data=exam_data, aes(x = MATHS, y = ENGLISH, colour = RACE)) + \n  geom_point(size=1) +\n  coord_cartesian(xlim=c(0,100), ylim=c(0,100))\n\nggplotly(p)"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#coordinate-multiple-views-with-plotly",
-    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#coordinate-multiple-views-with-plotly",
-    "title": "Hands-on Exercise 3-1",
-    "section": "3. Coordinate multiple views with plotly",
-    "text": "3. Coordinate multiple views with plotly\nDifferent from coordinating multiple views with ggiraph by using patchwork, Here are three steps to coordinate multiple views with plotly.\n\nhighlight_key() of plotly is used as shared data\n2 scatterplots will be created by using ggplot2 functions\nsubplot() of plotly is used to place them next to each other side-by-side\n\n\nd &lt;- highlight_key(exam_data)\n\np1 &lt;- ggplot(data=d,aes(x = MATHS, y = ENGLISH, colour = RACE)) +\n  geom_point(size=1) +\n  coord_cartesian(xlim=c(0,100), ylim=c(0,100))\n\np2 &lt;- ggplot(data=d, aes(x = MATHS, y = SCIENCE, colour = RACE)) +\n  geom_point(size=1) +\n  coord_cartesian(xlim=c(0,100), ylim=c(0,100))\n\nsubplot(ggplotly(p1), ggplotly(p2))"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#dt-package",
-    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#dt-package",
-    "title": "Hands-on Exercise 3-1",
-    "section": "1. DT package",
-    "text": "1. DT package\n\nDT::datatable(exam_data, class= \"compact\")"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#linked-brushing",
-    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#linked-brushing",
-    "title": "Hands-on Exercise 3-1",
-    "section": "2. Linked brushing",
-    "text": "2. Linked brushing\n\nLinked brushing is an interactive feature where selecting data points in one widget highlights the same points in another widget.\nhighlight() is a function of plotly package, to set a variety of options for brushing (i.e., highlighting) multiple plots.\nbscols() is a function of crosstalk package, to make it easy to put HTML elements side by side.\n\n\nd &lt;- highlight_key(exam_data) \n\np &lt;- ggplot(d, aes(ENGLISH, MATHS)) + \n  geom_point(size=1) +\n  coord_cartesian(xlim=c(0,100), ylim=c(0,100))\n\ngg &lt;- highlight(ggplotly(p), \"plotly_selected\")  \n\ncrosstalk::bscols(gg, DT::datatable(d), widths = 5)"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html",
-    "title": "Hands-on_Ex04_2",
-    "section": "",
-    "text": "ggstatsplot is an extension of ggplot2 package for creating graphics with details from statistical tests included in the information-rich plots themselves.\n\npacman::p_load(ggstatsplot, tidyverse)\n\n\n\n\n\nexam &lt;- read_csv(\"Exam_data.csv\")\n\n\n\n\n\nset.seed(1234)\n\ngghistostats(data = exam, x = ENGLISH, type = \"bayes\",\n             test.value = 60, xlab = \"English scores\")\n\n\n\n\n\n\n\n\n\n\n\n\nggbetweenstats(data = exam, x = GENDER, y = MATHS,\n               type = \"np\", messages = FALSE)\n\n\n\n\n\n\n\n\n\n\n\n\nggbetweenstats(data = exam, x = RACE, y = ENGLISH,\n               type = \"p\", mean.ci = TRUE,\n               pairwise.comparisons = TRUE,\n               pairwise.display = \"s\",\n               p.adjust.method = \"fdr\",\n               messages = FALSE)\n\n\n\n\n\n\n\n\n\n\n\n\nggscatterstats(data = exam, x = MATHS, y = ENGLISH,\n               marginal = FALSE)\n\n\n\n\n\n\n\n\n\n\n\n\nexam1 &lt;- exam %&gt;% \n  mutate(MATHS_bins =\n           cut(MATHS, breaks = c(0,60,75,85,100)))\n\n\nggbarstats(exam1, x = MATHS_bins, y = GENDER)"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html#installing-and-loading-packages",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html#installing-and-loading-packages",
-    "title": "Hands-on_Ex04_2",
-    "section": "",
-    "text": "ggstatsplot is an extension of ggplot2 package for creating graphics with details from statistical tests included in the information-rich plots themselves.\n\npacman::p_load(ggstatsplot, tidyverse)"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html#importing-data",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html#importing-data",
-    "title": "Hands-on_Ex04_2",
-    "section": "",
-    "text": "exam &lt;- read_csv(\"Exam_data.csv\")"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html#one-sample-test-gghistostats-method",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html#one-sample-test-gghistostats-method",
-    "title": "Hands-on_Ex04_2",
-    "section": "",
-    "text": "set.seed(1234)\n\ngghistostats(data = exam, x = ENGLISH, type = \"bayes\",\n             test.value = 60, xlab = \"English scores\")"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html#two-sample-mean-test-ggbetweenstats",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html#two-sample-mean-test-ggbetweenstats",
-    "title": "Hands-on_Ex04_2",
-    "section": "",
-    "text": "ggbetweenstats(data = exam, x = GENDER, y = MATHS,\n               type = \"np\", messages = FALSE)"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html#oneway-anova-test-ggbetweenstats-method",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html#oneway-anova-test-ggbetweenstats-method",
-    "title": "Hands-on_Ex04_2",
-    "section": "",
-    "text": "ggbetweenstats(data = exam, x = RACE, y = ENGLISH,\n               type = \"p\", mean.ci = TRUE,\n               pairwise.comparisons = TRUE,\n               pairwise.display = \"s\",\n               p.adjust.method = \"fdr\",\n               messages = FALSE)"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html#significant-test-of-correlation-ggscatterstats",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html#significant-test-of-correlation-ggscatterstats",
-    "title": "Hands-on_Ex04_2",
-    "section": "",
-    "text": "ggscatterstats(data = exam, x = MATHS, y = ENGLISH,\n               marginal = FALSE)"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html#significant-test-of-association-depedence-ggbarstats-methods",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html#significant-test-of-association-depedence-ggbarstats-methods",
-    "title": "Hands-on_Ex04_2",
-    "section": "",
-    "text": "exam1 &lt;- exam %&gt;% \n  mutate(MATHS_bins =\n           cut(MATHS, breaks = c(0,60,75,85,100)))\n\n\nggbarstats(exam1, x = MATHS_bins, y = GENDER)"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_4.html#the-basic-plot",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_4.html#the-basic-plot",
-    "title": "Hands-on_Ex04_4",
-    "section": "3.1 The basic plot",
-    "text": "3.1 The basic plot\n\nfunnel_plot(\n  .data = covid19,\n  numerator = Positive,\n  denominator = Death,\n  group = `Sub-district`\n)\n\n\n\n\n\n\n\n\nA funnel plot object with 267 points of which 0 are outliers. \nPlot is adjusted for overdispersion."
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_4.html#makeover-1",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_4.html#makeover-1",
-    "title": "Hands-on_Ex04_4",
-    "section": "3.2 Makeover 1",
-    "text": "3.2 Makeover 1\n\nfunnel_plot(\n  .data = covid19,\n  numerator = Death,\n  denominator = Positive,\n  group = `Sub-district`,\n  data_type = \"PR\",     #&lt;&lt;\n  xrange = c(0, 6500),  #&lt;&lt;\n  yrange = c(0, 0.05)   #&lt;&lt;\n)\n\n\n\n\n\n\n\n\nA funnel plot object with 267 points of which 7 are outliers. \nPlot is adjusted for overdispersion."
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_4.html#makeover-2",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_4.html#makeover-2",
-    "title": "Hands-on_Ex04_4",
-    "section": "3.3 Makeover 2",
-    "text": "3.3 Makeover 2\n\nfunnel_plot(\n  .data = covid19,\n  numerator = Death,\n  denominator = Positive,\n  group = `Sub-district`,\n  data_type = \"PR\",   \n  xrange = c(0, 6500),  \n  yrange = c(0, 0.05),\n  label = NA,\n  title = \"Cumulative COVID-19 Fatality Rate by Cumulative Total Number of COVID-19 Positive Cases\", #&lt;&lt;           \n  x_label = \"Cumulative COVID-19 Positive Cases\", #&lt;&lt;\n  y_label = \"Cumulative Fatality Rate\"  #&lt;&lt;\n)\n\n\n\n\n\n\n\n\nA funnel plot object with 267 points of which 7 are outliers. \nPlot is adjusted for overdispersion."
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_4.html#computing-the-basic-derived-fields",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_4.html#computing-the-basic-derived-fields",
-    "title": "Hands-on_Ex04_4",
-    "section": "4.1 Computing the basic derived fields",
-    "text": "4.1 Computing the basic derived fields\n\ndf &lt;- covid19 %&gt;%\n  mutate(rate = Death / Positive) %&gt;%\n  mutate(rate.se = sqrt((rate*(1-rate)) / (Positive))) %&gt;%\n  filter(rate &gt; 0)\n\nfit.mean &lt;- weighted.mean(df$rate, 1/df$rate.se^2)"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_4.html#calculate-lower-and-upper-limits-for-95-and-99.9-ci",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_4.html#calculate-lower-and-upper-limits-for-95-and-99.9-ci",
-    "title": "Hands-on_Ex04_4",
-    "section": "4.2 Calculate lower and upper limits for 95% and 99.9% CI",
-    "text": "4.2 Calculate lower and upper limits for 95% and 99.9% CI\n\nnumber.seq &lt;- seq(1, max(df$Positive), 1)\nnumber.ll95 &lt;- fit.mean - 1.96 * sqrt((fit.mean*(1-fit.mean)) / (number.seq)) \nnumber.ul95 &lt;- fit.mean + 1.96 * sqrt((fit.mean*(1-fit.mean)) / (number.seq)) \nnumber.ll999 &lt;- fit.mean - 3.29 * sqrt((fit.mean*(1-fit.mean)) / (number.seq)) \nnumber.ul999 &lt;- fit.mean + 3.29 * sqrt((fit.mean*(1-fit.mean)) / (number.seq)) \ndfCI &lt;- data.frame(number.ll95, number.ul95, number.ll999, \n                   number.ul999, number.seq, fit.mean)"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_4.html#plotting-a-static-funnel-plot",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_4.html#plotting-a-static-funnel-plot",
-    "title": "Hands-on_Ex04_4",
-    "section": "4.3 Plotting a static funnel plot",
-    "text": "4.3 Plotting a static funnel plot\n\np &lt;- ggplot(df, aes(x = Positive, y = rate)) +\n  geom_point(aes(label=`Sub-district`), \n             alpha=0.4) +\n  geom_line(data = dfCI, \n            aes(x = number.seq, \n                y = number.ll95), \n            size = 0.4, \n            colour = \"grey40\", \n            linetype = \"dashed\") +\n  geom_line(data = dfCI, \n            aes(x = number.seq, \n                y = number.ul95), \n            size = 0.4, \n            colour = \"grey40\", \n            linetype = \"dashed\") +\n  geom_line(data = dfCI, \n            aes(x = number.seq, \n                y = number.ll999), \n            size = 0.4, \n            colour = \"grey40\") +\n  geom_line(data = dfCI, \n            aes(x = number.seq, \n                y = number.ul999), \n            size = 0.4, \n            colour = \"grey40\") +\n  geom_hline(data = dfCI, \n             aes(yintercept = fit.mean), \n             size = 0.4, \n             colour = \"grey40\") +\n  coord_cartesian(ylim=c(0,0.05)) +\n  annotate(\"text\", x = 1, y = -0.13, label = \"95%\", size = 3, colour = \"grey40\") + \n  annotate(\"text\", x = 4.5, y = -0.18, label = \"99%\", size = 3, colour = \"grey40\") + \n  ggtitle(\"Cumulative Fatality Rate by Cumulative Number of COVID-19 Cases\") +\n  xlab(\"Cumulative Number of COVID-19 Cases\") + \n  ylab(\"Cumulative Fatality Rate\") +\n  theme_light() +\n  theme(plot.title = element_text(size=12),\n        legend.position = c(0.91,0.85), \n        legend.title = element_text(size=7),\n        legend.text = element_text(size=7),\n        legend.background = element_rect(colour = \"grey60\", linetype = \"dotted\"),\n        legend.key.height = unit(0.3, \"cm\"))\np"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_4.html#interactive-funnel-plot-plotly-ggplot2",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_4.html#interactive-funnel-plot-plotly-ggplot2",
-    "title": "Hands-on_Ex04_4",
-    "section": "4.4 Interactive Funnel Plot: plotly + ggplot2",
-    "text": "4.4 Interactive Funnel Plot: plotly + ggplot2\n\nfp_ggplotly &lt;- ggplotly(p,\n  tooltip = c(\"label\", \n              \"x\", \n              \"y\"))\nfp_ggplotly"
+    "text": "ggplot(exam, aes(x = RACE, y = ENGLISH)) +\n  stat_halfeye(adjust = 0.5, justification = -0.2,\n               .width = 0, point_colour = NA)\n\n\n\n\n\n\n\n\n\n\n\n\nggplot(exam, aes(x = RACE, y = ENGLISH)) +\n  stat_halfeye(adjust = 0.5, justification = -0.2,\n               .width = 0, point_colour = NA) +\n  geom_boxplot(width = .20, outlier.shape = NA)\n\n\n\n\n\n\n\n\n\n\n\n\nggplot(exam, aes(x = RACE, y = ENGLISH)) +\n  stat_halfeye(adjust = 0.5, justification = -0.2,\n               .width = 0, point_colour = NA) +\n  geom_boxplot(width = .20, outlier.shape = NA) +\n  stat_dots(side = \"left\", justification = 1.2, \n            binwidth = .5, dotsize = 2)\n\n\n\n\n\n\n\n\n\n\n\ncoord_flip() of ggplot2 package can be used to flip the raincloud chart horizontally. Besides, themes in the ggthemes package can be used to give the raincloud chart a professional publishing standard look.\n\nggplot(exam, aes(x = RACE, y = ENGLISH)) +\n  stat_halfeye(adjust = 0.5, justification = -0.2,\n               .width = 0, point_colour = NA) +\n  geom_boxplot(width = .20, outlier.shape = NA) +\n  stat_dots(side = \"left\", justification = 1.2, \n            binwidth = .5, dotsize = 1.5) +\n  coord_flip() + theme_wsj()"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_3.html#installing-and-loading-the-packages",
@@ -350,88 +399,228 @@
     "text": "4.3 Visualising Uncertainty with Hypothetical Outcome Plots (HOPs)\n\nggplot(data = exam, \n       (aes(x = factor(RACE), \n            y = MATHS))) +\n  geom_point(position = position_jitter(\n    height = 0.3, \n    width = 0.05), \n    size = 0.4, \n    color = \"#0072B2\", \n    alpha = 1/2) +\n  geom_hpline(data = sampler(25, \n                             group = RACE), \n              height = 0.6, \n              color = \"#D55E00\") +\n  theme_bw() + \n  transition_states(.draw, 1, 3)"
   },
   {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_1.html",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_1.html",
-    "title": "Hands-on_Ex04_1",
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_4.html#the-basic-plot",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_4.html#the-basic-plot",
+    "title": "Hands-on_Ex04_4",
+    "section": "3.1 The basic plot",
+    "text": "3.1 The basic plot\n\nfunnel_plot(\n  .data = covid19,\n  numerator = Positive,\n  denominator = Death,\n  group = `Sub-district`\n)\n\n\n\n\n\n\n\n\nA funnel plot object with 267 points of which 0 are outliers. \nPlot is adjusted for overdispersion."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_4.html#makeover-1",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_4.html#makeover-1",
+    "title": "Hands-on_Ex04_4",
+    "section": "3.2 Makeover 1",
+    "text": "3.2 Makeover 1\n\nfunnel_plot(\n  .data = covid19,\n  numerator = Death,\n  denominator = Positive,\n  group = `Sub-district`,\n  data_type = \"PR\",     #&lt;&lt;\n  xrange = c(0, 6500),  #&lt;&lt;\n  yrange = c(0, 0.05)   #&lt;&lt;\n)\n\n\n\n\n\n\n\n\nA funnel plot object with 267 points of which 7 are outliers. \nPlot is adjusted for overdispersion."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_4.html#makeover-2",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_4.html#makeover-2",
+    "title": "Hands-on_Ex04_4",
+    "section": "3.3 Makeover 2",
+    "text": "3.3 Makeover 2\n\nfunnel_plot(\n  .data = covid19,\n  numerator = Death,\n  denominator = Positive,\n  group = `Sub-district`,\n  data_type = \"PR\",   \n  xrange = c(0, 6500),  \n  yrange = c(0, 0.05),\n  label = NA,\n  title = \"Cumulative COVID-19 Fatality Rate by Cumulative Total Number of COVID-19 Positive Cases\", #&lt;&lt;           \n  x_label = \"Cumulative COVID-19 Positive Cases\", #&lt;&lt;\n  y_label = \"Cumulative Fatality Rate\"  #&lt;&lt;\n)\n\n\n\n\n\n\n\n\nA funnel plot object with 267 points of which 7 are outliers. \nPlot is adjusted for overdispersion."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_4.html#computing-the-basic-derived-fields",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_4.html#computing-the-basic-derived-fields",
+    "title": "Hands-on_Ex04_4",
+    "section": "4.1 Computing the basic derived fields",
+    "text": "4.1 Computing the basic derived fields\n\ndf &lt;- covid19 %&gt;%\n  mutate(rate = Death / Positive) %&gt;%\n  mutate(rate.se = sqrt((rate*(1-rate)) / (Positive))) %&gt;%\n  filter(rate &gt; 0)\n\nfit.mean &lt;- weighted.mean(df$rate, 1/df$rate.se^2)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_4.html#calculate-lower-and-upper-limits-for-95-and-99.9-ci",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_4.html#calculate-lower-and-upper-limits-for-95-and-99.9-ci",
+    "title": "Hands-on_Ex04_4",
+    "section": "4.2 Calculate lower and upper limits for 95% and 99.9% CI",
+    "text": "4.2 Calculate lower and upper limits for 95% and 99.9% CI\n\nnumber.seq &lt;- seq(1, max(df$Positive), 1)\nnumber.ll95 &lt;- fit.mean - 1.96 * sqrt((fit.mean*(1-fit.mean)) / (number.seq)) \nnumber.ul95 &lt;- fit.mean + 1.96 * sqrt((fit.mean*(1-fit.mean)) / (number.seq)) \nnumber.ll999 &lt;- fit.mean - 3.29 * sqrt((fit.mean*(1-fit.mean)) / (number.seq)) \nnumber.ul999 &lt;- fit.mean + 3.29 * sqrt((fit.mean*(1-fit.mean)) / (number.seq)) \ndfCI &lt;- data.frame(number.ll95, number.ul95, number.ll999, \n                   number.ul999, number.seq, fit.mean)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_4.html#plotting-a-static-funnel-plot",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_4.html#plotting-a-static-funnel-plot",
+    "title": "Hands-on_Ex04_4",
+    "section": "4.3 Plotting a static funnel plot",
+    "text": "4.3 Plotting a static funnel plot\n\np &lt;- ggplot(df, aes(x = Positive, y = rate)) +\n  geom_point(aes(label=`Sub-district`), \n             alpha=0.4) +\n  geom_line(data = dfCI, \n            aes(x = number.seq, \n                y = number.ll95), \n            size = 0.4, \n            colour = \"grey40\", \n            linetype = \"dashed\") +\n  geom_line(data = dfCI, \n            aes(x = number.seq, \n                y = number.ul95), \n            size = 0.4, \n            colour = \"grey40\", \n            linetype = \"dashed\") +\n  geom_line(data = dfCI, \n            aes(x = number.seq, \n                y = number.ll999), \n            size = 0.4, \n            colour = \"grey40\") +\n  geom_line(data = dfCI, \n            aes(x = number.seq, \n                y = number.ul999), \n            size = 0.4, \n            colour = \"grey40\") +\n  geom_hline(data = dfCI, \n             aes(yintercept = fit.mean), \n             size = 0.4, \n             colour = \"grey40\") +\n  coord_cartesian(ylim=c(0,0.05)) +\n  annotate(\"text\", x = 1, y = -0.13, label = \"95%\", size = 3, colour = \"grey40\") + \n  annotate(\"text\", x = 4.5, y = -0.18, label = \"99%\", size = 3, colour = \"grey40\") + \n  ggtitle(\"Cumulative Fatality Rate by Cumulative Number of COVID-19 Cases\") +\n  xlab(\"Cumulative Number of COVID-19 Cases\") + \n  ylab(\"Cumulative Fatality Rate\") +\n  theme_light() +\n  theme(plot.title = element_text(size=12),\n        legend.position = c(0.91,0.85), \n        legend.title = element_text(size=7),\n        legend.text = element_text(size=7),\n        legend.background = element_rect(colour = \"grey60\", linetype = \"dotted\"),\n        legend.key.height = unit(0.3, \"cm\"))\np"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_4.html#interactive-funnel-plot-plotly-ggplot2",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_4.html#interactive-funnel-plot-plotly-ggplot2",
+    "title": "Hands-on_Ex04_4",
+    "section": "4.4 Interactive Funnel Plot: plotly + ggplot2",
+    "text": "4.4 Interactive Funnel Plot: plotly + ggplot2\n\nfp_ggplotly &lt;- ggplotly(p,\n  tooltip = c(\"label\", \n              \"x\", \n              \"y\"))\nfp_ggplotly"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html",
+    "title": "Hands-on_Ex04_2",
     "section": "",
-    "text": "ggridges, a ggplot2 extension specially designed for plotting ridgeline plots\nggdist, a ggplot2 extension specially desgin for visualising distribution and uncertainty\ncolorspace, an R package provides a broad toolbox for selecting individual colors or color palettes, manipulating these colors, and employing them in various kinds of visualisations.\n\n\npacman::p_load(ggdist, ggridges, ggthemes, colorspace, tidyverse)\n\n\n\n\n\nexam &lt;- read_csv(\"Exam_data.csv\")\n\n\n\n\n\n\n\nggridges package provides two main geom to plot gridgeline plots:\n\ngeom_ridgeline(): takes height values directly to draw the ridgelines.\ngeom_density_ridges(): estimates data densities first and then draws those using ridgelines.\n\n\nggplot(exam, aes(x = ENGLISH, y = CLASS)) +\n  geom_density_ridges(scale = 3, rel_min_height = 0.01,\n                      bandwidth = 3.4,\n                      fill = lighten(\"#7097BB\", .3),\n                      color = \"white\") +\n  scale_x_continuous(name = \"English grades\",expand = c(0, 0)) +\n  scale_y_discrete(name = NULL, \n                   expand = expansion(add = c(0.2, 2.6))) +\n  theme_ridges()\n\n\n\n\n\n\n\n\n\n\n\ngeom_ridgeline_gradient() or geom_density_ridges_gradient() can be used to vary fill color along the x axis. However, they do not allow for alpha transparency in the fill. For technical reasons, we can have changing fill colors or transparency but not both.\n\nggplot(exam, aes(x = ENGLISH, y = CLASS, fill = stat(x))) +\n  geom_density_ridges_gradient(scale = 3,\n                               rel_min_height = 0.01) +\n  scale_fill_viridis_c(name = \"Temp. [F]\", option = \"C\") +\n  scale_x_continuous(name = \"English grades\",\n                     expand = c(0, 0)) +\n  scale_y_discrete(name = NULL, \n                   expand = expansion(add = c(0.2, 2.6))) +\n  theme_ridges()\n\n\n\n\n\n\n\n\n\n\n\n\n\nggplot(exam, aes(x = ENGLISH, y = CLASS,\n                 fill = 0.5 - abs(0.5-stat(ecdf)))) +\n  stat_density_ridges(geom = \"density_ridges_gradient\",\n                      calc_ecdf = TRUE) +\n  scale_fill_viridis_c(name = \"Tail probability\", \n                       direction = -1) +\n  theme_ridges()\n\n\n\n\n\n\n\n\n\n\n\nBy using geom_density_ridges_gradient(), we can colour the ridgeline plot by quantile.\n\nggplot(exam, aes(x = ENGLISH, y = CLASS,\n                 fill = factor(stat(quantile)))) +\n  stat_density_ridges(geom = \"density_ridges_gradient\",\n                      calc_ecdf = TRUE, quantiles = 4,\n                      quantile_lines = TRUE) +\n  scale_fill_viridis_d(name = \"Quartiles\") +\n  theme_ridges()\n\n\n\n\n\n\n\n\nwe can also specify quantiles by cut points such as 10% and 90% tails to colour the ridgeline plot as shown in the figure below.\n\nggplot(exam, aes(x = ENGLISH, y = CLASS, \n                 fill = factor(stat(quantile)))) +\n  stat_density_ridges(geom = \"density_ridges_gradient\",\n                      calc_ecdf = TRUE, \n                      quantiles = c(0.100, 0.900)) +\n  scale_fill_manual(name = \"Probability\", values = c(\"#FF0000A0\", \"#A0A0A0A0\", \"#0000FFA0\"), labels = c(\"(0, 0.100]\", \"(0.100, 0.900]\", \"(0.900, 1]\")) +\n  theme_ridges()\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nggplot(exam, aes(x = RACE, y = ENGLISH)) +\n  stat_halfeye(adjust = 0.5, justification = -0.2,\n               .width = 0, point_colour = NA)\n\n\n\n\n\n\n\n\n\n\n\n\nggplot(exam, aes(x = RACE, y = ENGLISH)) +\n  stat_halfeye(adjust = 0.5, justification = -0.2,\n               .width = 0, point_colour = NA) +\n  geom_boxplot(width = .20, outlier.shape = NA)\n\n\n\n\n\n\n\n\n\n\n\n\nggplot(exam, aes(x = RACE, y = ENGLISH)) +\n  stat_halfeye(adjust = 0.5, justification = -0.2,\n               .width = 0, point_colour = NA) +\n  geom_boxplot(width = .20, outlier.shape = NA) +\n  stat_dots(side = \"left\", justification = 1.2, \n            binwidth = .5, dotsize = 2)\n\n\n\n\n\n\n\n\n\n\n\ncoord_flip() of ggplot2 package can be used to flip the raincloud chart horizontally. Besides, themes in the ggthemes package can be used to give the raincloud chart a professional publishing standard look.\n\nggplot(exam, aes(x = RACE, y = ENGLISH)) +\n  stat_halfeye(adjust = 0.5, justification = -0.2,\n               .width = 0, point_colour = NA) +\n  geom_boxplot(width = .20, outlier.shape = NA) +\n  stat_dots(side = \"left\", justification = 1.2, \n            binwidth = .5, dotsize = 1.5) +\n  coord_flip() + theme_wsj()"
+    "text": "ggstatsplot is an extension of ggplot2 package for creating graphics with details from statistical tests included in the information-rich plots themselves.\n\npacman::p_load(ggstatsplot, tidyverse)\n\n\n\n\n\nexam &lt;- read_csv(\"Exam_data.csv\")\n\n\n\n\n\nset.seed(1234)\n\ngghistostats(data = exam, x = ENGLISH, type = \"bayes\",\n             test.value = 60, xlab = \"English scores\")\n\n\n\n\n\n\n\n\n\n\n\n\nggbetweenstats(data = exam, x = GENDER, y = MATHS,\n               type = \"np\", messages = FALSE)\n\n\n\n\n\n\n\n\n\n\n\n\nggbetweenstats(data = exam, x = RACE, y = ENGLISH,\n               type = \"p\", mean.ci = TRUE,\n               pairwise.comparisons = TRUE,\n               pairwise.display = \"s\",\n               p.adjust.method = \"fdr\",\n               messages = FALSE)\n\n\n\n\n\n\n\n\n\n\n\n\nggscatterstats(data = exam, x = MATHS, y = ENGLISH,\n               marginal = FALSE)\n\n\n\n\n\n\n\n\n\n\n\n\nexam1 &lt;- exam %&gt;% \n  mutate(MATHS_bins =\n           cut(MATHS, breaks = c(0,60,75,85,100)))\n\n\nggbarstats(exam1, x = MATHS_bins, y = GENDER)"
   },
   {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_1.html#getting-started",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_1.html#getting-started",
-    "title": "Hands-on_Ex04_1",
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html#installing-and-loading-packages",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html#installing-and-loading-packages",
+    "title": "Hands-on_Ex04_2",
     "section": "",
-    "text": "ggridges, a ggplot2 extension specially designed for plotting ridgeline plots\nggdist, a ggplot2 extension specially desgin for visualising distribution and uncertainty\ncolorspace, an R package provides a broad toolbox for selecting individual colors or color palettes, manipulating these colors, and employing them in various kinds of visualisations.\n\n\npacman::p_load(ggdist, ggridges, ggthemes, colorspace, tidyverse)\n\n\n\n\n\nexam &lt;- read_csv(\"Exam_data.csv\")"
+    "text": "ggstatsplot is an extension of ggplot2 package for creating graphics with details from statistical tests included in the information-rich plots themselves.\n\npacman::p_load(ggstatsplot, tidyverse)"
   },
   {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_1.html#visualizing-distribution-with-ridgeline-plot",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_1.html#visualizing-distribution-with-ridgeline-plot",
-    "title": "Hands-on_Ex04_1",
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html#importing-data",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html#importing-data",
+    "title": "Hands-on_Ex04_2",
     "section": "",
-    "text": "ggridges package provides two main geom to plot gridgeline plots:\n\ngeom_ridgeline(): takes height values directly to draw the ridgelines.\ngeom_density_ridges(): estimates data densities first and then draws those using ridgelines.\n\n\nggplot(exam, aes(x = ENGLISH, y = CLASS)) +\n  geom_density_ridges(scale = 3, rel_min_height = 0.01,\n                      bandwidth = 3.4,\n                      fill = lighten(\"#7097BB\", .3),\n                      color = \"white\") +\n  scale_x_continuous(name = \"English grades\",expand = c(0, 0)) +\n  scale_y_discrete(name = NULL, \n                   expand = expansion(add = c(0.2, 2.6))) +\n  theme_ridges()\n\n\n\n\n\n\n\n\n\n\n\ngeom_ridgeline_gradient() or geom_density_ridges_gradient() can be used to vary fill color along the x axis. However, they do not allow for alpha transparency in the fill. For technical reasons, we can have changing fill colors or transparency but not both.\n\nggplot(exam, aes(x = ENGLISH, y = CLASS, fill = stat(x))) +\n  geom_density_ridges_gradient(scale = 3,\n                               rel_min_height = 0.01) +\n  scale_fill_viridis_c(name = \"Temp. [F]\", option = \"C\") +\n  scale_x_continuous(name = \"English grades\",\n                     expand = c(0, 0)) +\n  scale_y_discrete(name = NULL, \n                   expand = expansion(add = c(0.2, 2.6))) +\n  theme_ridges()"
+    "text": "exam &lt;- read_csv(\"Exam_data.csv\")"
   },
   {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_1.html#mapping-the-probabilities-directly-onto-colour-stat_density_ridges",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_1.html#mapping-the-probabilities-directly-onto-colour-stat_density_ridges",
-    "title": "Hands-on_Ex04_1",
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html#one-sample-test-gghistostats-method",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html#one-sample-test-gghistostats-method",
+    "title": "Hands-on_Ex04_2",
     "section": "",
-    "text": "ggplot(exam, aes(x = ENGLISH, y = CLASS,\n                 fill = 0.5 - abs(0.5-stat(ecdf)))) +\n  stat_density_ridges(geom = \"density_ridges_gradient\",\n                      calc_ecdf = TRUE) +\n  scale_fill_viridis_c(name = \"Tail probability\", \n                       direction = -1) +\n  theme_ridges()"
+    "text": "set.seed(1234)\n\ngghistostats(data = exam, x = ENGLISH, type = \"bayes\",\n             test.value = 60, xlab = \"English scores\")"
   },
   {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_1.html#ridgeline-plots-with-quantile-lines",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_1.html#ridgeline-plots-with-quantile-lines",
-    "title": "Hands-on_Ex04_1",
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html#two-sample-mean-test-ggbetweenstats",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html#two-sample-mean-test-ggbetweenstats",
+    "title": "Hands-on_Ex04_2",
     "section": "",
-    "text": "By using geom_density_ridges_gradient(), we can colour the ridgeline plot by quantile.\n\nggplot(exam, aes(x = ENGLISH, y = CLASS,\n                 fill = factor(stat(quantile)))) +\n  stat_density_ridges(geom = \"density_ridges_gradient\",\n                      calc_ecdf = TRUE, quantiles = 4,\n                      quantile_lines = TRUE) +\n  scale_fill_viridis_d(name = \"Quartiles\") +\n  theme_ridges()\n\n\n\n\n\n\n\n\nwe can also specify quantiles by cut points such as 10% and 90% tails to colour the ridgeline plot as shown in the figure below.\n\nggplot(exam, aes(x = ENGLISH, y = CLASS, \n                 fill = factor(stat(quantile)))) +\n  stat_density_ridges(geom = \"density_ridges_gradient\",\n                      calc_ecdf = TRUE, \n                      quantiles = c(0.100, 0.900)) +\n  scale_fill_manual(name = \"Probability\", values = c(\"#FF0000A0\", \"#A0A0A0A0\", \"#0000FFA0\"), labels = c(\"(0, 0.100]\", \"(0.100, 0.900]\", \"(0.900, 1]\")) +\n  theme_ridges()"
+    "text": "ggbetweenstats(data = exam, x = GENDER, y = MATHS,\n               type = \"np\", messages = FALSE)"
   },
   {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_1.html#visualising-distribution-with-raincloud-plot",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_1.html#visualising-distribution-with-raincloud-plot",
-    "title": "Hands-on_Ex04_1",
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html#oneway-anova-test-ggbetweenstats-method",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html#oneway-anova-test-ggbetweenstats-method",
+    "title": "Hands-on_Ex04_2",
     "section": "",
-    "text": "ggplot(exam, aes(x = RACE, y = ENGLISH)) +\n  stat_halfeye(adjust = 0.5, justification = -0.2,\n               .width = 0, point_colour = NA)\n\n\n\n\n\n\n\n\n\n\n\n\nggplot(exam, aes(x = RACE, y = ENGLISH)) +\n  stat_halfeye(adjust = 0.5, justification = -0.2,\n               .width = 0, point_colour = NA) +\n  geom_boxplot(width = .20, outlier.shape = NA)\n\n\n\n\n\n\n\n\n\n\n\n\nggplot(exam, aes(x = RACE, y = ENGLISH)) +\n  stat_halfeye(adjust = 0.5, justification = -0.2,\n               .width = 0, point_colour = NA) +\n  geom_boxplot(width = .20, outlier.shape = NA) +\n  stat_dots(side = \"left\", justification = 1.2, \n            binwidth = .5, dotsize = 2)\n\n\n\n\n\n\n\n\n\n\n\ncoord_flip() of ggplot2 package can be used to flip the raincloud chart horizontally. Besides, themes in the ggthemes package can be used to give the raincloud chart a professional publishing standard look.\n\nggplot(exam, aes(x = RACE, y = ENGLISH)) +\n  stat_halfeye(adjust = 0.5, justification = -0.2,\n               .width = 0, point_colour = NA) +\n  geom_boxplot(width = .20, outlier.shape = NA) +\n  stat_dots(side = \"left\", justification = 1.2, \n            binwidth = .5, dotsize = 1.5) +\n  coord_flip() + theme_wsj()"
+    "text": "ggbetweenstats(data = exam, x = RACE, y = ENGLISH,\n               type = \"p\", mean.ci = TRUE,\n               pairwise.comparisons = TRUE,\n               pairwise.display = \"s\",\n               p.adjust.method = \"fdr\",\n               messages = FALSE)"
   },
   {
-    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#loading-the-r-packages",
-    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#loading-the-r-packages",
-    "title": "Hands-on_Ex03_2",
-    "section": "1. Loading the R packages",
-    "text": "1. Loading the R packages\n\nplotly: R library for plotting interactive statistical graphs.\ngganimate: An ggplot extension for creating animated statistical graphs.\ngifski: To convert video frames to GIF animations.\ngapminder: An excerpt of the data available at Gapminder.org. We just want to use its country_colors scheme.\ntidyverse: A family of modern R packages specially designed to support data science, analysis and communication task.\nreadxl: An R package used to read .xls and .xlsx into R.\n\n\npacman::p_load(plotly, gganimate, gifski, gapminder, tidyverse, readxl)"
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html#significant-test-of-correlation-ggscatterstats",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html#significant-test-of-correlation-ggscatterstats",
+    "title": "Hands-on_Ex04_2",
+    "section": "",
+    "text": "ggscatterstats(data = exam, x = MATHS, y = ENGLISH,\n               marginal = FALSE)"
   },
   {
-    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#importing-the-data",
-    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#importing-the-data",
-    "title": "Hands-on_Ex03_2",
-    "section": "2. Importing the data",
-    "text": "2. Importing the data\n\ncol &lt;- c(\"Country\", \"Continent\")\n# to create a character vector containing the values \"Country\", \"Continent\"\n\nglobalPop &lt;- read_xls(\"GlobalPopulation.xls\", sheet=\"Data\") %&gt;%\n# %&gt;% is the pipe operator in R, it passes the result of one function into the next\n  \n  mutate(across(all_of(col), as.factor)) %&gt;%\n  # mutate(): to add or change columns in a data frame\n  # across(col, as.factor): to convert the col to factor type\n  # mutate_at() also can be used here\n  \n  mutate(Year = as.integer(Year))\n  # convert year to integer"
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html#significant-test-of-association-depedence-ggbarstats-methods",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html#significant-test-of-association-depedence-ggbarstats-methods",
+    "title": "Hands-on_Ex04_2",
+    "section": "",
+    "text": "exam1 &lt;- exam %&gt;% \n  mutate(MATHS_bins =\n           cut(MATHS, breaks = c(0,60,75,85,100)))\n\n\nggbarstats(exam1, x = MATHS_bins, y = GENDER)"
   },
   {
-    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#building-a-static-poplulation-bubble-plot",
-    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#building-a-static-poplulation-bubble-plot",
-    "title": "Hands-on_Ex03_2",
-    "section": "1. Building a static poplulation bubble plot",
-    "text": "1. Building a static poplulation bubble plot\n\nggplot(globalPop, aes(x = Old, y = Young, size = Population, colour = Country)) +\n  geom_point(alpha = 0.7, show.legend = FALSE) +\n  scale_colour_manual(values = country_colors) +\n  scale_size(range = c(2, 12)) +\n  labs(title = 'Year: {frame_time}', x = '% Aged', y = '% Young')"
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#loading-packages",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#loading-packages",
+    "title": "Hands-on Exercise 3-1",
+    "section": "1. Loading packages",
+    "text": "1. Loading packages\nPackages Introduction\n\nggiraph: to make ggplot graphics interactive\nplotly: to plot interactive statistical graphs\nDT: to provide an R interface to the JavaScript library DataTables to create interactive table on html page\ntidyverse: a family of modern R packages specially designed to support data science, analysis and communication task\npatchwork: to combine multiple ggplot2 graphs into one figure\n\n\npacman::p_load(ggiraph, plotly, patchwork, DT, tidyverse)"
   },
   {
-    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#building-the-animated-bubble-plot",
-    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#building-the-animated-bubble-plot",
-    "title": "Hands-on_Ex03_2",
-    "section": "2. Building the animated bubble plot",
-    "text": "2. Building the animated bubble plot\n\ntransition_time() is used to create transition through distinct states in time (i.e. Year)\nease_aes() is used to control easing of aesthetics. The default is linear. Other methods are as the following:\n\nquadratic\ncubic\nquartic\nquintic\nsine\ncircular\nexponential\nelastic\nback\nbounce\n\nview_*(): to control the panel behavior\nshadow_*(): to keep traces of previous or future frames\nenter_*()/exit_*() : to define how elements appear and disappear\n\n\nggplot(globalPop, aes(x = Old, y = Young, size = Population, colour = Country)) +\n  geom_point(alpha = 0.7, show.legend = FALSE) +\n  scale_colour_manual(values = country_colors) +\n  scale_size(range = c(2, 12)) +\n  labs(title = 'Year: {frame_time}', x = '% Aged', y = '% Young') +\n  \n  transition_time(Year) +       \n  ease_aes('linear') + \n  view_follow(fixed_y = TRUE) + \n  # follow the data horizontally\n  shadow_mark(past = TRUE, future = FALSE, alpha = 0.2) +\n  # keep traces of previous frames\n  enter_fade() + exit_shrink()"
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#importing-data",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#importing-data",
+    "title": "Hands-on Exercise 3-1",
+    "section": "2. Importing data",
+    "text": "2. Importing data\n\nexam_data&lt;-read_csv(\"Exam_data.csv\")"
   },
   {
-    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#building-an-animated-bubble-plot-ggploy",
-    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#building-an-animated-bubble-plot-ggploy",
-    "title": "Hands-on_Ex03_2",
-    "section": "1. Building an animated bubble plot: ggploy()",
-    "text": "1. Building an animated bubble plot: ggploy()\n“show.legend = FALSE” doesn’t work here, so here needs to use “theme(legend.position=‘none’)”\n\ngg &lt;- ggplot(globalPop, aes(x = Old, y = Young, size = Population,\n                            colour = Country)) +\n  geom_point(aes(size = Population, frame = Year), alpha = 0.7,\n             show.legend = FALSE) +\n  scale_colour_manual(values = country_colors) +\n  scale_size(range = c(2, 12)) +\n  labs(x = '% Aged', y = '% Young') + \n  theme(legend.position='none')\n\nggplotly(gg)"
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#tooltip",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#tooltip",
+    "title": "Hands-on Exercise 3-1",
+    "section": "1. tooltip",
+    "text": "1. tooltip\nTooltip’s function is to display the information when the mouse is over elements.\n\n(1) Displaying one information on tooltip\n\np &lt;- ggplot(data=exam_data, aes(x = MATHS)) +\n  geom_dotplot_interactive(aes(tooltip = ID), stackgroups = TRUE, \n                           binwidth = 1, method = \"histodot\") +\n  scale_y_continuous(NULL, breaks = NULL)\n\ngirafe(ggobj = p, width_svg = 6, height_svg = 6*0.618)\n\n\n\n\n\n\n\n(2) Displaying multiple information on tooltip\n\nexam_data$tooltip &lt;- paste0(\"Name = \", exam_data$ID,\"\\n CLASS = \", exam_data$CLASS)\n# create a new field called tooltip, including ID and CLASS.\n# paste0(): to concatenate strings\n\np &lt;- ggplot(data=exam_data, aes(x = MATHS)) +\n  geom_dotplot_interactive(aes(tooltip = exam_data$tooltip),\n                           stackgroups = TRUE, binwidth = 1, \n                           method = \"histodot\") +\n  scale_y_continuous(NULL, breaks = NULL)\n\ngirafe(ggobj = p, width_svg = 6, height_svg = 6*0.618)\n\n\n\n\n\n\n\n(3) Customising Tooltip style\n\ntooltip_css &lt;- \"background-color:white; font-style:bold; color:black;\" \n\np &lt;- ggplot(data=exam_data, aes(x = MATHS)) +\n  geom_dotplot_interactive(aes(tooltip = ID), stackgroups = TRUE, binwidth = 1, method = \"histodot\") +\n  scale_y_continuous(NULL, breaks = NULL)\n\ngirafe(ggobj = p, width_svg = 6, height_svg = 6*0.618,\n  options = list(opts_tooltip(css = tooltip_css))) \n\n\n\n\n\n\n\n(4) Displaying statistics on tooltip\n\ntooltip &lt;- function(y, ymax, accuracy = .01) {\n  mean &lt;- scales::number(y, accuracy = accuracy)\n  sem &lt;- scales::number(ymax - y, accuracy = accuracy)\n  paste(\"Mean maths scores:\", mean, \"+/-\", sem)\n}\n\ngg_point &lt;- ggplot(data=exam_data, \n                   aes(x = RACE)) +\n  stat_summary(aes(y = MATHS, tooltip = after_stat(tooltip(y, ymax))),  \n    fun.data = \"mean_se\", geom = GeomInteractiveCol,fill = \"light pink\") +\n  stat_summary(aes(y = MATHS),fun.data = mean_se,geom = \"errorbar\", width = 0.2, size = 0.2)\n\ngirafe(ggobj = gg_point, width_svg = 8, height_svg = 8*0.618)"
   },
   {
-    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#building-an-animated-bubble-plot-plot_ly",
-    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html#building-an-animated-bubble-plot-plot_ly",
-    "title": "Hands-on_Ex03_2",
-    "section": "2. Building an animated bubble plot: plot_ly()",
-    "text": "2. Building an animated bubble plot: plot_ly()\n\nbp &lt;- globalPop %&gt;%\n  \n  plot_ly(x = ~Old, y = ~Young, size = ~Population, color = ~Continent,\n          sizes = c(2, 100), frame = ~Year, text = ~Country, hoverinfo = \"text\",\n          type = 'scatter', mode = 'markers') %&gt;%\n  \n  layout(showlegend = FALSE)\n\nbp"
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#data_id",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#data_id",
+    "title": "Hands-on Exercise 3-1",
+    "section": "2. Data_id",
+    "text": "2. Data_id\nData_id is used to assign a unique identifier to each graphic element. In this case, elements associated with a data_id will be highlighted upon mouse over.\n\np &lt;- ggplot(data=exam_data, aes(x = MATHS)) +\n  geom_dotplot_interactive(aes(data_id = CLASS), stackgroups = TRUE, binwidth = 1, method = \"histodot\") +\n  scale_y_continuous(NULL, breaks = NULL)\n\ngirafe(ggobj = p, width_svg = 6, height_svg = 6*0.618)\n\n\n\n\n\n\n(1)Styling hover effect\n\np &lt;- ggplot(data=exam_data, aes(x = MATHS)) +\n  geom_dotplot_interactive(aes(data_id = CLASS), stackgroups = TRUE, binwidth = 1, method = \"histodot\") +               \n  scale_y_continuous(NULL, breaks = NULL)\n\ngirafe(ggobj = p,width_svg = 6,height_svg = 6*0.618,\n  options = list(opts_hover(css = \"fill: #202020;\"), opts_hover_inv(css = \"opacity:0.2;\")))                                        \n\n\n\n\n\n\n\n(2) Combing tooltip and hover effect\n\np &lt;- ggplot(data=exam_data, aes(x = MATHS)) +\n  geom_dotplot_interactive(aes(tooltip=CLASS,data_id = CLASS), stackgroups = TRUE, binwidth = 1, method = \"histodot\") +               \n  scale_y_continuous(NULL, breaks = NULL)\n\ngirafe(ggobj = p,width_svg = 6,height_svg = 6*0.618,\n  options = list(opts_hover(css = \"fill: #202020;\"), opts_hover_inv(css = \"opacity:0.2;\")))"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#onclick",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#onclick",
+    "title": "Hands-on Exercise 3-1",
+    "section": "3. Onclick",
+    "text": "3. Onclick\nOnclick is to define a JavaScript action that happens when the user clicks on a visual element.\n\nexam_data$onclick &lt;- sprintf(\"window.open(\\\"%s%s\\\")\",\n\"https://www.moe.gov.sg/schoolfinder?journey=Primary%20school\",\nas.character(exam_data$ID))\n\np &lt;- ggplot(data=exam_data, aes(x = MATHS)) +\n  geom_dotplot_interactive(aes(onclick = onclick), stackgroups = TRUE, binwidth = 1, method = \"histodot\") +\n  scale_y_continuous(NULL, breaks = NULL)\n\ngirafe(ggobj = p, width_svg = 6, height_svg = 6*0.618)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#coordinate-multiple-views-with-ggiraph",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#coordinate-multiple-views-with-ggiraph",
+    "title": "Hands-on Exercise 3-1",
+    "section": "4. Coordinate multiple views with ggiraph",
+    "text": "4. Coordinate multiple views with ggiraph\nTo achieve this, appropriate interactive functions of ggiraph will be used to create the multiple views, and patchwork function will be used inside girafe function to coordinate multiple views.\n\np1 &lt;- ggplot(data=exam_data, aes(x = MATHS)) +\n  geom_dotplot_interactive(aes(data_id = ID), stackgroups = TRUE, binwidth = 1, method = \"histodot\") +  \n  coord_cartesian(xlim=c(0,100)) + \n  scale_y_continuous(NULL, breaks = NULL)\n\np2 &lt;- ggplot(data=exam_data, aes(x = ENGLISH)) +\n  geom_dotplot_interactive(aes(data_id = ID), stackgroups = TRUE, binwidth = 1, method = \"histodot\") +  \n  coord_cartesian(xlim=c(0,100)) + \n  scale_y_continuous(NULL, breaks = NULL)\n\ngirafe(code = print(p1 + p2), width_svg = 6, height_svg = 3, \n       options = list(opts_hover(css = \"fill: #202020;\"), \n              opts_hover_inv(css = \"opacity:0.2;\")))"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#plot_ly-method",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#plot_ly-method",
+    "title": "Hands-on Exercise 3-1",
+    "section": "1. plot_ly() method",
+    "text": "1. plot_ly() method\n\nplot_ly(data = exam_data, x = ~MATHS, y = ~ENGLISH, color = ~RACE)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#ggplotly-method",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#ggplotly-method",
+    "title": "Hands-on Exercise 3-1",
+    "section": "2. ggplotly() method",
+    "text": "2. ggplotly() method\n\np &lt;- ggplot(data=exam_data, aes(x = MATHS, y = ENGLISH, colour = RACE)) + \n  geom_point(size=1) +\n  coord_cartesian(xlim=c(0,100), ylim=c(0,100))\n\nggplotly(p)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#coordinate-multiple-views-with-plotly",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#coordinate-multiple-views-with-plotly",
+    "title": "Hands-on Exercise 3-1",
+    "section": "3. Coordinate multiple views with plotly",
+    "text": "3. Coordinate multiple views with plotly\nDifferent from coordinating multiple views with ggiraph by using patchwork, Here are three steps to coordinate multiple views with plotly.\n\nhighlight_key() of plotly is used as shared data\n2 scatterplots will be created by using ggplot2 functions\nsubplot() of plotly is used to place them next to each other side-by-side\n\n\nd &lt;- highlight_key(exam_data)\n\np1 &lt;- ggplot(data=d,aes(x = MATHS, y = ENGLISH, colour = RACE)) +\n  geom_point(size=1) +\n  coord_cartesian(xlim=c(0,100), ylim=c(0,100))\n\np2 &lt;- ggplot(data=d, aes(x = MATHS, y = SCIENCE, colour = RACE)) +\n  geom_point(size=1) +\n  coord_cartesian(xlim=c(0,100), ylim=c(0,100))\n\nsubplot(ggplotly(p1), ggplotly(p2))"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#dt-package",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#dt-package",
+    "title": "Hands-on Exercise 3-1",
+    "section": "1. DT package",
+    "text": "1. DT package\n\nDT::datatable(exam_data, class= \"compact\")"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#linked-brushing",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html#linked-brushing",
+    "title": "Hands-on Exercise 3-1",
+    "section": "2. Linked brushing",
+    "text": "2. Linked brushing\n\nLinked brushing is an interactive feature where selecting data points in one widget highlights the same points in another widget.\nhighlight() is a function of plotly package, to set a variety of options for brushing (i.e., highlighting) multiple plots.\nbscols() is a function of crosstalk package, to make it easy to put HTML elements side by side.\n\n\nd &lt;- highlight_key(exam_data) \n\np &lt;- ggplot(d, aes(ENGLISH, MATHS)) + \n  geom_point(size=1) +\n  coord_cartesian(xlim=c(0,100), ylim=c(0,100))\n\ngg &lt;- highlight(ggplotly(p), \"plotly_selected\")  \n\ncrosstalk::bscols(gg, DT::datatable(d), widths = 5)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html",
+    "title": "Hands-on_Ex02",
+    "section": "",
+    "text": "pacman::p_load(ggrepel,\n               ggthemes,\n               hrbrthemes,\n               patchwork,\n               tidyverse)\n\n\n\n\n\nexam_data&lt;-read_csv(\"Exam_data.csv\")\n\nRows: 322 Columns: 7\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (4): ID, CLASS, GENDER, RACE\ndbl (3): ENGLISH, MATHS, SCIENCE\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\n\n\n\n\n\n\n\n\nggplot(data=exam_data,\n       aes(x=MATHS,\n           y=ENGLISH))+\n  geom_point()+\n  geom_smooth(method = lm,\n              linewidth=0.5)+\n  geom_label(aes(label=ID),\n             hjust=.5,\n             vjust=-.5)+\n  coord_cartesian(xlim = c(0,100),\n                  ylim = c(0,100))+\n  ggtitle(\"English scores versus Maths scores for primary 3\")\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nggplot(data=exam_data,\n       aes(x=MATHS,\n           y=ENGLISH))+\n  geom_point()+\n  geom_smooth(method = lm,\n              linewidth=0.5)+\n  geom_label_repel(aes(label = ID),\n                   fontface = \"bold\")+\n  coord_cartesian(xlim = c(0,100),\n                  ylim = c(0,100))+\n  ggtitle(\"English scores versus Maths scores for primary 3\")\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\nWarning: ggrepel: 317 unlabeled data points (too many overlaps). Consider\nincreasing max.overlaps\n\n\n\n\n\n\n\n\n\n\n\n\n\nggplot(data=exam_data,\n       aes(x=MATHS,\n           y=ENGLISH))+\n  geom_point()+\n  geom_smooth(method = lm,\n              linewidth=0.5)+\n  geom_text_repel(aes(label = ID),\n                   fontface = \"bold\",\n                  size = 3.5,\n                  color = \"blue\")+\n  coord_cartesian(xlim = c(0,100),\n                  ylim = c(0,100))+\n  ggtitle(\"English scores versus Maths scores for primary 3\")\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\nWarning: ggrepel: 302 unlabeled data points (too many overlaps). Consider\nincreasing max.overlaps\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nggplot(data = exam_data,\n       aes(x = MATHS)) +\n  geom_histogram(bins = 20,\n                 boundary = 100,\n                 color = \"white\",\n                 fill = \"grey\")+\n  ggtitle(\"Distribution of Maths scores\")+\n  theme_wsj()+\n  theme(plot.title = element_text(size = 20))\n\n\n\n\n\n\n\n\n\n\n\n\nggplot(data = exam_data,\n       aes(x = MATHS)) +\n  geom_histogram(bins = 20,\n                 boundary = 100,\n                 color = \"white\",\n                 fill = \"grey\")+\n  ggtitle(\"Distribution of Maths scores\")+\n  theme_ipsum(axis_title_size = 15,\n              base_size = 15,\n              grid = \"N\")\n\n\n\n\n\n\n\n\n\n\n\n\n\n\np1&lt;-ggplot(data = exam_data,\n           aes(x=MATHS))+\n  geom_histogram(bins=20,\n                 boundary=100,\n                 color=\"grey25\",\n                 fill=\"grey90\")+\n  coord_cartesian(xlim=c(0,100))+\n  ggtitle(\"Distribution of Maths Scores\")\np1\n\n\n\n\n\n\n\n\n\np2&lt;-ggplot(data = exam_data,\n           aes(x=ENGLISH))+\n  geom_histogram(bins=20,\n                 boundary=100,\n                 color=\"grey25\",\n                 fill=\"grey90\")+\n  coord_cartesian(xlim=c(0,100))+\n  ggtitle(\"Distribution of English Scores\")\np2\n\n\n\n\n\n\n\n\n\np3&lt;-ggplot(data = exam_data,\n           aes(x=MATHS,\n               y=ENGLISH))+\n  geom_point()+\n  geom_smooth(method=lm,\n              size=0.5)+\n  coord_cartesian(xlim = c(0,100),\n                  ylim = c(0,100))+\n  ggtitle(\"English scores versus Maths scores for Primary 3\")\n\nWarning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.\nℹ Please use `linewidth` instead.\n\np3\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\n\n\n\n\np1+p2\n\n\n\n\n\n\n\n\n\n\n\n\n“/” operator to stack two ggplot2 graphs\n“|” operator to place the plots beside each other\n“()” operator the define the sequence of the plotting\n\n\n(p1 / p2) | p3\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\n\n\n\n((p1 / p2) | p3) + \n  plot_annotation(tag_levels = 'I')\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\n\n\n\n\np3 + inset_element(p2, \n                   left = 0.02, \n                   bottom = 0.7, \n                   right = 0.5, \n                   top = 1)\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\n\n\n\n\npatchwork &lt;- (p1 / p2) | p3\npatchwork & theme_wsj()+theme(plot.title = element_text(size = 6))\n\n`geom_smooth()` using formula = 'y ~ x'"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#data-preparation",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#data-preparation",
+    "title": "Hands-on_Ex02",
+    "section": "",
+    "text": "pacman::p_load(ggrepel,\n               ggthemes,\n               hrbrthemes,\n               patchwork,\n               tidyverse)\n\n\n\n\n\nexam_data&lt;-read_csv(\"Exam_data.csv\")\n\nRows: 322 Columns: 7\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (4): ID, CLASS, GENDER, RACE\ndbl (3): ENGLISH, MATHS, SCIENCE\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#ggrepel-to-repel-overlapping-text",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#ggrepel-to-repel-overlapping-text",
+    "title": "Hands-on_Ex02",
+    "section": "",
+    "text": "ggplot(data=exam_data,\n       aes(x=MATHS,\n           y=ENGLISH))+\n  geom_point()+\n  geom_smooth(method = lm,\n              linewidth=0.5)+\n  geom_label(aes(label=ID),\n             hjust=.5,\n             vjust=-.5)+\n  coord_cartesian(xlim = c(0,100),\n                  ylim = c(0,100))+\n  ggtitle(\"English scores versus Maths scores for primary 3\")\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nggplot(data=exam_data,\n       aes(x=MATHS,\n           y=ENGLISH))+\n  geom_point()+\n  geom_smooth(method = lm,\n              linewidth=0.5)+\n  geom_label_repel(aes(label = ID),\n                   fontface = \"bold\")+\n  coord_cartesian(xlim = c(0,100),\n                  ylim = c(0,100))+\n  ggtitle(\"English scores versus Maths scores for primary 3\")\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\nWarning: ggrepel: 317 unlabeled data points (too many overlaps). Consider\nincreasing max.overlaps\n\n\n\n\n\n\n\n\n\n\n\n\n\nggplot(data=exam_data,\n       aes(x=MATHS,\n           y=ENGLISH))+\n  geom_point()+\n  geom_smooth(method = lm,\n              linewidth=0.5)+\n  geom_text_repel(aes(label = ID),\n                   fontface = \"bold\",\n                  size = 3.5,\n                  color = \"blue\")+\n  coord_cartesian(xlim = c(0,100),\n                  ylim = c(0,100))+\n  ggtitle(\"English scores versus Maths scores for primary 3\")\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\nWarning: ggrepel: 302 unlabeled data points (too many overlaps). Consider\nincreasing max.overlaps"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#ggthemes",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#ggthemes",
+    "title": "Hands-on_Ex02",
+    "section": "",
+    "text": "ggplot(data = exam_data,\n       aes(x = MATHS)) +\n  geom_histogram(bins = 20,\n                 boundary = 100,\n                 color = \"white\",\n                 fill = \"grey\")+\n  ggtitle(\"Distribution of Maths scores\")+\n  theme_wsj()+\n  theme(plot.title = element_text(size = 20))"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#hrbrthemes",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#hrbrthemes",
+    "title": "Hands-on_Ex02",
+    "section": "",
+    "text": "ggplot(data = exam_data,\n       aes(x = MATHS)) +\n  geom_histogram(bins = 20,\n                 boundary = 100,\n                 color = \"white\",\n                 fill = \"grey\")+\n  ggtitle(\"Distribution of Maths scores\")+\n  theme_ipsum(axis_title_size = 15,\n              base_size = 15,\n              grid = \"N\")"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#pathwork-to-combine-single-graphs",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#pathwork-to-combine-single-graphs",
+    "title": "Hands-on_Ex02",
+    "section": "",
+    "text": "p1&lt;-ggplot(data = exam_data,\n           aes(x=MATHS))+\n  geom_histogram(bins=20,\n                 boundary=100,\n                 color=\"grey25\",\n                 fill=\"grey90\")+\n  coord_cartesian(xlim=c(0,100))+\n  ggtitle(\"Distribution of Maths Scores\")\np1\n\n\n\n\n\n\n\n\n\np2&lt;-ggplot(data = exam_data,\n           aes(x=ENGLISH))+\n  geom_histogram(bins=20,\n                 boundary=100,\n                 color=\"grey25\",\n                 fill=\"grey90\")+\n  coord_cartesian(xlim=c(0,100))+\n  ggtitle(\"Distribution of English Scores\")\np2\n\n\n\n\n\n\n\n\n\np3&lt;-ggplot(data = exam_data,\n           aes(x=MATHS,\n               y=ENGLISH))+\n  geom_point()+\n  geom_smooth(method=lm,\n              size=0.5)+\n  coord_cartesian(xlim = c(0,100),\n                  ylim = c(0,100))+\n  ggtitle(\"English scores versus Maths scores for Primary 3\")\n\nWarning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.\nℹ Please use `linewidth` instead.\n\np3\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\n\n\n\n\np1+p2\n\n\n\n\n\n\n\n\n\n\n\n\n“/” operator to stack two ggplot2 graphs\n“|” operator to place the plots beside each other\n“()” operator the define the sequence of the plotting\n\n\n(p1 / p2) | p3\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\n\n\n\n((p1 / p2) | p3) + \n  plot_annotation(tag_levels = 'I')\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\n\n\n\n\np3 + inset_element(p2, \n                   left = 0.02, \n                   bottom = 0.7, \n                   right = 0.5, \n                   top = 1)\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\n\n\n\n\npatchwork &lt;- (p1 / p2) | p3\npatchwork & theme_wsj()+theme(plot.title = element_text(size = 6))\n\n`geom_smooth()` using formula = 'y ~ x'"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html",
