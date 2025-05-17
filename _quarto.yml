@@ -29,6 +29,10 @@ website:
         menu: 
           - text: "Take-home Exercise 1"
             href: "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html"
+      - text: "VAST Challenge 2025"
+        menu: 
+          - text: "MC1"
+            href: "VAST Challenge 2025/MC1/MC1.html"
     right: 
       - href: index.qmd
         text: Home
