@@ -32,6 +32,7 @@ edges_tbl<-as_tibble(kg$links)
 ```
 
 # Initial EDA
+
 ```{r}
 ggplot(data = edges_tbl,
        aes(y=`Edge Type`))+
