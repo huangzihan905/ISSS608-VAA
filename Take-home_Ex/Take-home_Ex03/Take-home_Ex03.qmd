@@ -1,0 +1,732 @@
+---
+title: "Take-home Exercise 3"
+author: "Huang Zihan"
+date: "Jun 7, 2025"
+date-modified: "last-modified"
+format: 
+  html:
+    code-fold: true
+    code-summary: "Show the code"
+editor: visual
+execute: 
+  eval: true
+  echo: true
+  warning: false
+---
+
+# 1. The Task
+
+In this take-home exercise, we are required to select one of the module of our proposed Shiny application and complete the following tasks:
+
+-   To evaluate and determine the necessary R packages needed for your Shiny application are supported in R CRAN,
+-   To prepare and test the specific R codes can be run and returned the correct output as expected,
+-   To determine the parameters and outputs that will be exposed on the Shiny applications, and
+-   To select the appropriate Shiny UI components for exposing the parameters determine above.
+
+# 2. Project Overview
+
+This project seeks to design and develop insightful visualizations and analytic tools that allow users (like Silas) to explore the musical influence network centered on Sailor Shift. Specifically, we aim to:
+
+-   Map Musical Influence: Visualize how Sailor Shift has been influenced by others and, in turn, how she has directly or indirectly influenced artists and genres.
+
+-   Analyze Collaborations: Identify key collaborators throughout Sailor’s career, both from her early band (Ivy Echoes) and her solo years, and analyze the genres and roles of those collaborators.
+
+-   Track Genre Evolution: Understand how Oceanus Folk evolved and interacted with genres like Indie Folk, Indie Pop, and Darkwave through stylized performances, lyrical themes, and musical structure.
+
+-   Visualize Career Milestones: Highlight key turning points in Sailor’s career, including viral hits, genre shifts, and breakout collaborations using timeline and network-based views.
+
+-   Compare Artists’ Careers: Contrast the musical journeys of Sailor’s former bandmates or contemporaries, and assess what defines a rising star in Oceanus Folk.
+
+-   Predict Emerging Stars: Use influence and collaboration patterns to forecast the next potential breakout artists in the Oceanus Folk scene.
+
+# 3. Loading Data and Packages
+
+The dataset for **VAST Challenge 2025 MC1** is a synthetic, directed multigraph comprising over 17,000 nodes and nearly 38,000 edges. It models relationships in the music industry, including people, songs, albums, musical groups, and record labels. Edges represent connections such as performance, production, influence, and membership. The data integrates crowdsourced musical influence annotations with aggregate popularity metrics (e.g., chart appearances), providing a rich network for analyzing artistic influence, career progression, and genre evolution within a fictional yet realistic music ecosystem.
+
+## 3.1 Loading R Packages
+
+The following packages are the needed packages:
+
+-   **tidyverse**: A collection of R packages designed for data science, offering tools for data manipulation, visualization, and analysis using a consistent syntax.
+-   **jsonlite**: Provides a robust and easy-to-use framework for parsing and generating JSON data in R.
+-   **SmartEDA**: Automates exploratory data analysis (EDA) by generating summary statistics, visualizations, and variable profiling with minimal code.
+-   **tidygraph**: Brings tidyverse principles to graph data, enabling tidy manipulation of nodes and edges in network analysis.
+-   **ggraph**: An extension of ggplot2 for visualizing graph and network structures in a customizable and aesthetically pleasing way.
+-   **plotly**: Enables interactive, web-based visualizations using ggplot2 or direct plotly syntax, enhancing data exploration.
+-   **treemapify**: Creates treemaps using the ggplot2 framework, allowing hierarchical data to be visualized with area-proportional rectangles.
+-   **visNetwork**: Facilitates interactive network visualization using the vis.js JavaScript library, enabling dynamic manipulation and exploration of network graphs.
+-   **RColorBrewer**: An R package that provides a selection of color palettes specially designed for creating clear, visually appealing maps and graphics, particularly for categorical and sequential data.
+
+```{r}
+pacman::p_load(tidyverse, jsonlite, SmartEDA, tidygraph, ggraph, plotly, treemapify, visNetwork, RColorBrewer, DT, ggthemes)
+```
+
+## 3.2 Importing the Data
+
+For the purpose of this exercise, MC1_graph.json file will be used. Before getting started, we should have the data set in the data sub-folder.
+
+In the code chunk below, fromJSON() of jsonlite package is used to import MC1_graph.json file into R and save the output object
+
+```{r}
+kg <- fromJSON("MC1_release/MC1_graph.json")
+```
+
+# 4. Data Preparation and Cleaning
+
+Before performing any analysis or visualizations, the data extracted from `MC1_graph.json` must be structured and cleaned for usability. The JSON file contains a directed multigraph with two primary components: a list of nodes and a list of links. These must be parsed into two separate data frames (`nodes_tbl` and `edges_tbl`) and enriched with meaningful attributes to support downstream tasks such as filtering, grouping, and network visualization.
+
+## 4.1 Extracting Nodes and Edges
+
+After loading the JSON file, we extract the node and edge lists:
+
+```{r}
+nodes_tbl <- as_tibble(kg$nodes)
+edges_tbl <- as_tibble(kg$links)
+glimpse(nodes_tbl)
+glimpse(edges_tbl)
+```
+
+## 4.2 Map Node IDs to Row Indices
+
+Since tidygraph relies on row numbers (not raw IDs) for defining connections between nodes, we generate a mapping from each node's unique id to its corresponding row index:
+
+```{r}
+id_map <- tibble(id = nodes_tbl$id,
+                 index = seq_len(nrow(nodes_tbl)))
+```
+
+## 4.3 Replace Edge IDs with Row Indices
+
+We then update the `edges_tbl` by replacing the source and target IDs with the corresponding row indices (from, to) using two `left_join()` operations:
+
+```{r}
+edges_tbl <- edges_tbl %>%
+  left_join(id_map, by = c("source" = "id")) %>%
+  rename(from = index) %>%
+  left_join(id_map, by = c("target" = "id")) %>%
+  rename(to = index)
+```
+
+This step aligns the edge table with the row-based referencing system used by tidygraph.
+
+## 4.4 Filter Invalid Edges
+
+Some edges might refer to nodes that don’t exist (e.g., due to missing or inconsistent IDs). These would result in NA values in the from or to columns. We filter out such cases to ensure the integrity of the graph:
+
+```{r}
+edges_tbl <- edges_tbl %>%
+  filter(!is.na(from), !is.na(to))
+```
+
+## 4.5 Subset Relevant Songs (Oceanus Folk & Sailor Shift)
+
+In this assignment, since we need to analyze the relationship between Oceanus Folk and Salior Shift, we prepared the data subset here.
+
+**Oceanus Folk songs:**
+
+```{r}
+of_songs <- nodes_tbl %>%
+  filter(`Node Type` == "Song", genre == "Oceanus Folk")
+```
+
+**Sailor Shift songs:**
+
+```{r}
+# Get Sailor Shift's person id
+sailor_shift_id <- nodes_tbl %>%
+  filter(`Node Type` == "Person", name == "Sailor Shift") %>%
+  pull(id)
+
+# Get All Songs Performed by Sailor Shift
+ss_song_ids <- edges_tbl %>%
+  filter(`Edge Type` == "PerformerOf", source == sailor_shift_id) %>%
+  pull(target)
+
+# Get Song Details
+sailor_shift_songs <- nodes_tbl %>%
+  filter(id %in% ss_song_ids, `Node Type` == "Song")
+```
+
+## 4.6 Define “influence” operationally
+
+To illustrate how the influence of Oceanus Folk has spread through the musical world, we need to define "influence" first.
+
+A song is influenced by Oceanus Folk if:
+
+-   The source is an Oceanus Folk song
+
+-   The edge type is one of the below
+
+-   The target is any other node (usually a song or album)
+
+Based on these points, we can get the influence-type edges by the following code chunk:
+
+```{r}
+influence_types <- c("InStyleOf", "CoverOf", "LyricalReferenceTo", "InterpolatesFrom", "DirectlySamples")
+
+influence_edges <- edges_tbl %>%
+  filter(`Edge Type` %in% influence_types)
+```
+
+## 4.7 OUTWARD Influence of Oceanus Folks
+
+Songs or albums influenced by Oceanus Folk:
+
+```{r}
+# Get IDs of Oceanus Folk songs
+of_song_ids <- of_songs$id
+
+# Filter edges where Oceanus Folk is the influencer (source)
+outward_influences <- influence_edges %>%
+  filter(source %in% of_song_ids)
+
+# Get target nodes that were influenced by Oceanus Folk
+outward_nodes <- nodes_tbl %>%
+  filter(id %in% outward_influences$target)
+```
+
+We can now analyze `outward_nodes` to get genre distribution, timeline, etc.
+
+## 4.8 INWARD Influence of Oceanus Folks
+
+Songs or albums that influenced Oceanus Folk:
+
+```{r}
+# Get IDs of Oceanus Folk songs
+of_song_ids <- of_songs$id
+
+# Filter edges where Oceanus Folk songs are the influenced target
+inward_influences <- influence_edges %>%
+  filter(target %in% of_song_ids)
+
+# Get source nodes that influenced Oceanus Folk songs
+inward_nodes <- nodes_tbl %>%
+  filter(id %in% inward_influences$source)
+```
+
+# 5. Exploratory Data Analysis
+
+To examine the data, the following code chunks are used to reveal the frequency distribution of Edge Type field of edges_tbl and the frequency distribution of Node Type field of nodes_tbl
+
+## 5.1 Count of Edge Types
+
+```{r}
+ggplot(data = edges_tbl,
+       aes(y=`Edge Type`))+
+  geom_bar()
+```
+
+## 5.2 Count of Node Types
+
+```{r}
+ggplot(data = nodes_tbl,
+       aes(y=`Node Type`))+
+  geom_bar()
+```
+
+## 5.3 Genre Distribution of Songs
+
+```{r}
+nodes_tbl %>%
+  filter(`Node Type` == "Song") %>%
+  count(genre, sort = TRUE) %>%
+  ggplot(aes(x = reorder(genre, n), y = n)) +
+  geom_bar(stat = "identity", fill = "tomato") +
+  coord_flip() +
+  labs(title = "Count of Songs in each Genre", x = "Genre", y = "Count") +
+  theme_minimal()
+```
+
+## 5.4 Temporal Distribution of Oceanus Folk Songs
+
+```{r}
+of_songs %>%
+  filter(!is.na(release_date)) %>%
+  count(release_date) %>%
+  ggplot(aes(x = as.integer(release_date), y = n)) +
+  geom_line(color = "purple") +
+  labs(title = "Release Trend of Oceanus Folk Songs", x = "Year", y = "Number of Songs") +
+  theme_minimal()
+```
+
+## 5.5 Influenced Genre Distribution
+
+```{r}
+outward_nodes %>%
+  count(genre, sort = TRUE) %>%
+  ggplot(aes(x = reorder(genre, n), y = n)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  coord_flip() +
+  labs(title = "Top 10 Genres Influenced by Oceanus Folk", x = "Genre", y = "Count") +
+  theme_minimal()
+```
+
+
+# 6. Was this influence intermittent or did it have a gradual rise?
+
+For the below code chunk, the line chart is used as the visualization, to see the influence trend based on the year. From the result, we can see the influence trend is not always rising.
+
+## 6.1 Temporal Spread of Influence from Oceanus Folk
+
+The visualization shows that Oceanus Folk had minimal influence before the year 2000, with only sporadic instances of influenced songs. However, starting in the mid-2000s, there is a noticeable increase in influence, peaking dramatically around 2010 with more than 80 influenced songs in a single year. A second but smaller spike appears around 2017. Following that, the influence seems to decline gradually, with some fluctuations, suggesting that the genre's impact, while still present, has become more subdued in last years.
+
+```{r}
+# Step 1: Get influenced songs from Oceanus Folk
+influence_over_time <- influence_edges %>%
+  filter(source %in% of_songs$id) %>%
+  left_join(nodes_tbl, by = c("target" = "id")) %>%
+  filter(`Node Type` == "Song", !is.na(release_date)) %>%
+  mutate(release_year = as.integer(release_date)) %>%
+  count(release_year, name = "influenced_count")
+
+# Step 2: Create interactive time series plot
+plot_ly(influence_over_time,
+        x = ~release_year,
+        y = ~influenced_count,
+        type = 'scatter',
+        mode = 'lines+markers',
+        line = list(color = 'steelblue'),
+        marker = list(size = 6, color = 'black'),
+        text = ~paste("Year:", release_year, "<br>Influenced Songs:", influenced_count),
+        hoverinfo = 'text') %>%
+  layout(title = "Spread of Oceanus Folk Influence Over Time",
+         xaxis = list(title = "Release Year of Influenced Songs"),
+         yaxis = list(title = "Number of Influenced Songs"),
+         hoverlabel = list(bgcolor = "white"))
+```
+
+## 6.2 Heatmap of Oceanus Folk Influence by Genre and Year
+To further explore the diffusion of Oceanus Folk influence across time and genre, we visualize a heatmap where each cell corresponds to the number of influenced songs in a specific genre and year. The darker the shade, the stronger the influence. This approach highlights not just volume but also temporal patterns in genre-specific influence.
+
+```{r}
+# Prepare tooltip text
+influence_heatmap <- influence_edges %>%
+  filter(source %in% of_songs$id) %>%
+  left_join(nodes_tbl, by = c("target" = "id")) %>%
+  filter(!is.na(release_date), !is.na(genre)) %>%
+  count(release_date, genre) %>%
+  mutate(release_year = as.character(release_date),  # Treat as categorical
+         tooltip = paste("<b>", release_year, "</b>", 
+                         "\nGenre : ", genre,
+                         "\nInfluenced Songs : ", n))
+
+# Heatmap plot using ggplot and theme_tufte
+heat <- ggplot(influence_heatmap, aes(x = release_year, y = genre, fill = n)) + 
+  geom_tile(color = "white", size = 1, aes(text = tooltip)) + 
+  theme_tufte(base_family = "Helvetica") + 
+  coord_equal() +
+  scale_fill_gradient(name = "Influenced Songs", low = "#fff2f4", high = "coral") +
+  labs(x = "Release Year", 
+       y = "Genre", 
+       title = "Oceanus Folk Influence by Genre and Year",
+       caption = "Data Source: VAST Challenge 2025 MC1") +
+  theme(axis.ticks = element_blank(),
+        axis.text.x = element_text(size = 8, angle = 90, hjust = 1),
+        axis.text.y = element_text(size = 8),
+        plot.title = element_text(hjust = 0.5, face = "bold"),
+        legend.title = element_text(size = 9),
+        legend.text = element_text(size = 7),
+        legend.position = "top")
+
+# Convert to interactive plot
+ggplotly(heat, tooltip = "text")
+
+```
+
+# 7. What genres and top artists have been most influenced by Oceanus Folk?
+
+Following the line chart and heatmap analyses, which illustrated when Oceanus Folk exerted influence and which genres were affected in specific years. In this section, there are two parts, to understand what genres and top artists have been most influenced by Oceanus Folk.
+
+## 7.1 Descriptive Statstics of Artists Influenced by Oceanus Folk
+
+```{r}
+# Step 1: Get songs influenced by Oceanus Folk
+of_influenced_songs <- influence_edges %>%
+  filter(source %in% of_songs$id) %>%
+  left_join(nodes_tbl, by = c("target" = "id")) %>%
+  filter(`Node Type` == "Song") %>%
+  rename(song_id = target, 
+         song_name = name)
+
+# Step 2: Get performing artist IDs and names
+performers <- edges_tbl %>%
+  filter(`Edge Type` == "PerformerOf", target %in% of_influenced_songs$song_id) %>%
+  rename(song_id = target, artist_id = source) %>%
+  left_join(nodes_tbl, by = c("artist_id" = "id")) %>%
+  select(song_id, artist_id, artist_name = name)
+
+# Step 3: Combine song info and artist info
+influenced_song_details <- of_influenced_songs %>%
+  left_join(performers, by = "song_id") %>%
+  select(song_id,
+         song_name,
+         artist_id,
+         artist_name,
+         genre,
+         release_date,
+         notoriety_date,
+         notable,
+         single)
+
+# Step 4: Show interactive data table
+DT::datatable(
+  influenced_song_details,
+  options = list(
+    pageLength = 10,
+    autoWidth = TRUE,
+    scrollX = TRUE
+  ),
+  rownames = FALSE,
+  caption = htmltools::tags$caption(
+    style = "caption-side: top; text-align: left;",
+    "Table: Songs influenced by Oceanus Folk and their performing artists"
+  )
+)
+
+```
+
+## 7.2 Most influenced artists by Oceanus Folk
+
+This bar chart highlights the individual artists most influenced by the genre. Each bar represents an artist, with the length corresponding to the number of songs they performed that were influenced by Oceanus Folk. The chart reveals that five artists, Synaptic Stream, Stephen Meyer, Fixx’d, Chao Tan, and Alfred Thibault, are the most prominently influenced, each associated with three influenced songs. A substantial number of other artists follow closely, each contributing two influenced works.
+
+```{r}
+# Step 1: Get songs influenced by Oceanus Folk
+of_influenced_song_ids <- influence_edges %>%
+  filter(source %in% of_songs$id) %>%
+  pull(target)
+
+# Step 2: Link to PerformerOf edges
+top_artist_ids <- edges_tbl %>%
+  filter(`Edge Type` == "PerformerOf", target %in% of_influenced_song_ids) %>%
+  count(source, sort = TRUE) %>%
+  slice_max(n, n = 10)
+
+# Step 3: Get artist names
+top_artists <- top_artist_ids %>%
+  left_join(nodes_tbl, by = c("source" = "id"))
+
+# Step 4: Plot with improved theme
+ggplot(top_artists, aes(x = reorder(name, n), y = n)) +
+  geom_col(fill = "lightcoral") +
+  geom_text(aes(label = n), hjust = -0.2, size = 3, family = "Helvetica") +
+  coord_flip() +
+  labs(
+    title = "Top Artists Influenced by Oceanus Folk",
+    x = "Artist",
+    y = "Number of Influenced Songs"
+  ) +
+  theme_tufte(base_family = "Helvetica") +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    axis.text.x = element_text(size = 8),
+    axis.text.y = element_text(size = 8),
+    axis.title.x = element_text(size = 9),
+    axis.title.y = element_text(size = 9)
+  )
+
+```
+
+## 7.3 Network Analysis
+
+### 7.3.1 Network Analysis for Genres Influenced by Oceanus Folk
+To understand how Oceanus Folk has influenced other genres, we use a 1-hop ego network visualization. This shows which genres were most frequently influenced by Oceanus Folk songs.
+
+```{r}
+# Step 1: Filter outward-influenced nodes to songs with known genre
+outward_genre_edges <- outward_influences %>%
+  left_join(nodes_tbl, by = c("target" = "id")) %>%
+  filter(`Node Type` == "Song", !is.na(genre)) %>%
+  transmute(from = "Oceanus Folk", to = genre)  # Oceanus Folk → genre
+
+# Step 2: Count influence strength by genre
+outward_genre_strength <- outward_genre_edges %>%
+  count(to, name = "influence_count")
+
+# Step 3: Identify top 5 influenced genres and assign colors
+top5_out_genres <- outward_genre_strength %>%
+  arrange(desc(influence_count)) %>%
+  slice(1:5) %>%
+  mutate(color = rev(RColorBrewer::brewer.pal(5, "Oranges")))
+
+# Step 4: Build nodes for visNetwork
+outward_genre_nodes <- unique(c(outward_genre_edges$from, outward_genre_edges$to)) %>%
+  tibble(id = .) %>%
+  left_join(outward_genre_strength, by = c("id" = "to")) %>%
+  left_join(top5_out_genres %>% select(id = to, top5_color = color), by = "id") %>%
+  mutate(
+    influence_count = replace_na(influence_count, 1),
+    label = id,
+    value = influence_count * 2,
+    color = case_when(
+      id == "Oceanus Folk" ~ "#4682B4",            # Blue for Oceanus Folk
+      !is.na(top5_color) ~ top5_color,             # Top 5 in Oranges palette
+      TRUE ~ "#FDD0A2"                              # Others in light orange
+    ),
+    title = paste0("Genre: ", id, "<br>Influence Count: ", influence_count)
+  )
+
+# Step 5: Render network
+visNetwork(outward_genre_nodes, outward_genre_edges, height = "600px", width = "100%") %>%
+  visEdges(arrows = "to") %>%
+  visOptions(highlightNearest = TRUE) %>%
+  visLayout(randomSeed = 456) %>%
+  visPhysics(enabled = FALSE)
+```
+
+### 7.3.2 Network Analysis for Artists Influence by Oceanus Folks
+
+```{r}
+# Step 1: Create central node for Oceanus Folk
+oceanus_ego_center_node <- tibble(
+  id = "Oceanus Folk",
+  label = "Oceanus Folk",
+  group = "genre"
+)
+
+# Step 2: Create artist nodes only
+artist_nodes <- influenced_song_details %>%
+  distinct(artist_name) %>%
+  filter(!is.na(artist_name)) %>%
+  mutate(id = paste0("artist_", row_number()),
+         label = artist_name,
+         group = "person")
+
+# Step 3: Create edges: Oceanus Folk → Artists (one edge per unique artist)
+edges_genre_to_artists <- artist_nodes %>%
+  transmute(from = "Oceanus Folk", to = id)
+
+# Step 4: Combine nodes and edges
+nodes_viz <- bind_rows(oceanus_ego_center_node, artist_nodes)
+edges_viz <- edges_genre_to_artists
+
+# Step 5: Plot network
+visNetwork(nodes_viz, edges_viz, height = "700px", width = "100%") %>%
+  visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE) %>%
+  visLayout(randomSeed = 123) %>%
+  visNodes(shape = "dot", size = 15) %>%
+  visGroups(groupname = "genre", color = "steelblue") %>%
+  visGroups(groupname = "person", color = "tomato") %>%
+  visLegend()
+```
+
+## 6.2 Descriptive Statstics of Artists Influenced by Salior Shift Songs
+
+```{r}
+# Step 2: Get influence edges where Sailor Shift's songs are the source
+ss_song_ids <- sailor_shift_songs$id
+
+ss_outward_edges <- influence_edges %>%
+  filter(source %in% ss_song_ids)
+
+# Step 3: Get the target works (songs or albums) influenced by Sailor Shift
+influenced_works <- nodes_tbl %>%
+  filter(id %in% ss_outward_edges$target)
+
+# Step 4: Get artists who performed these influenced works
+influenced_artist_links <- edges_tbl %>%
+  filter(`Edge Type` == "PerformerOf", target %in% influenced_works$id) %>%
+  rename(work_id = target, artist_id = source) %>%
+  left_join(nodes_tbl, by = c("artist_id" = "id")) %>%
+  select(work_id, artist_id, artist_name = name)
+
+# Step 5: Join with work metadata for descriptive view
+influenced_by_sailor <- influenced_works %>%
+  left_join(influenced_artist_links, by = c("id" = "work_id")) %>%
+  select(work_id = id,
+         work_name = name,
+         work_type = `Node Type`,
+         artist_id,
+         artist_name,
+         genre,
+         release_date,
+         notable)
+
+# Step 6: Show interactive data table
+DT::datatable(
+  influenced_by_sailor,
+  options = list(
+    pageLength = 10,
+    autoWidth = TRUE,
+    scrollX = TRUE
+  ),
+  rownames = FALSE,
+  caption = htmltools::tags$caption(
+    style = "caption-side: top; text-align: left;",
+    "Table: Songs influenced by Salior Shift and their performing artists"
+  )
+)
+```
+
+# 7. Network Analysis
+
+## 7.1 Outward Influence of Oceanus Folks
+
+
+
+
+
+### 7.1.2 Network Analysis for Works and Artists influenced by Salior Shift
+
+```{r}
+# Step 1: Create center node for Sailor Shift
+ss_center_node <- tibble(
+  id = "Sailor Shift",
+  label = "Sailor Shift",
+  group = "center"
+)
+
+# Step 2: Create work nodes (distinguish between songs and albums using group)
+work_nodes <- influenced_by_sailor %>%
+  distinct(work_name, work_type) %>%
+  mutate(id = paste0("work_", row_number()),
+         label = work_name,
+         group = ifelse(work_type == "Song", "song", "album"))
+
+# Step 3: Create artist nodes
+artist_nodes <- influenced_by_sailor %>%
+  distinct(artist_name) %>%
+  filter(!is.na(artist_name)) %>%
+  mutate(id = paste0("artist_", row_number()),
+         label = artist_name,
+         group = "person")
+
+# Step 4: Create edges from Sailor Shift → Works
+edges_ss_to_works <- work_nodes %>%
+  transmute(from = "Sailor Shift", to = id)
+
+# Step 5: Create edges from Works → Artists
+edges_work_to_artist <- influenced_by_sailor %>%
+  inner_join(work_nodes, by = c("work_name" = "label")) %>%
+  inner_join(artist_nodes, by = c("artist_name" = "label")) %>%
+  transmute(from = id.x, to = id.y)
+
+# Step 6: Combine nodes and edges
+nodes_viz <- bind_rows(ss_center_node, work_nodes, artist_nodes)
+edges_viz <- bind_rows(edges_ss_to_works, edges_work_to_artist)
+
+# Step 7: Visualize
+visNetwork(nodes_viz, edges_viz, height = "700px", width = "100%") %>%
+  visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE) %>%
+  visLayout(randomSeed = 888) %>%
+  visNodes(shape = "dot", size = 15) %>%
+  visGroups(groupname = "center", color = "steelblue") %>%
+  visGroups(groupname = "song", color = "lightgreen") %>%
+  visGroups(groupname = "album", color = "khaki") %>%
+  visGroups(groupname = "person", color = "tomato") %>%
+  visLegend()
+```
+
+
+## 7.2 Inward Influence of Oceanus Folk
+
+### 7.2.1 Network Analysis for Geners that Influence Oceanus Folks
+
+```{r}
+# Step 1: Filter inward-influencing nodes to songs with known genre
+inward_genre_edges <- inward_influences %>%
+  left_join(nodes_tbl, by = c("source" = "id")) %>%
+  filter(`Node Type` == "Song", !is.na(genre)) %>%
+  transmute(from = genre, to = "Oceanus Folk")  # genre → Oceanus Folk
+
+# Step 2: Count influence strength by genre
+inward_genre_strength <- inward_genre_edges %>%
+  count(from, name = "influence_count")
+
+# Step 3: Identify top 5 genres and assign colors
+top5_genres <- inward_genre_strength %>%
+  arrange(desc(influence_count)) %>%
+  slice(1:5) %>%
+  mutate(color = rev(brewer.pal(5, "Blues")))
+
+# Step 4: Build nodes for visNetwork
+inward_genre_nodes <- unique(c(inward_genre_edges$from, inward_genre_edges$to)) %>%
+  tibble(id = .) %>%
+  left_join(inward_genre_strength, by = c("id" = "from")) %>%
+  left_join(top5_genres %>% select(id = from, top5_color = color), by = "id") %>%
+  mutate(
+    influence_count = replace_na(influence_count, 1),
+    label = id,
+    value = influence_count * 2,
+    color = case_when(
+      id == "Oceanus Folk" ~ "#FF6347",           # Red for Oceanus Folk
+      !is.na(top5_color) ~ top5_color,            # Top 5 in Blues palette
+      TRUE ~ "#9ECAE1"                             # Others light blue
+    ),
+    title = paste0("Genre: ", id, "<br>Influence Count: ", influence_count)
+  )
+
+# Step 5: Render influence network
+visNetwork(inward_genre_nodes, inward_genre_edges) %>%
+  visEdges(arrows = "to") %>%
+  visOptions(highlightNearest = TRUE) %>%
+  visLayout(randomSeed = 321) %>%
+  visPhysics(enabled = FALSE)
+```
+
+### 7.2.2 Network Analysis for Songs, Albums and Artists that Influence Oceanus Folks
+
+```{r}
+# Step 1: Filter influential works (songs & albums only)
+influential_works <- inward_nodes %>%
+  filter(`Node Type` %in% c("Song", "Album")) %>%
+  mutate(work_label = name,
+         work_id = paste0("work_", row_number()),
+         group = ifelse(`Node Type` == "Song", "song", "album"))
+
+# Step 2: Get performing artists for those works
+influencing_artists <- edges_tbl %>%
+  filter(`Edge Type` == "PerformerOf", target %in% influential_works$id) %>%
+  rename(work_real_id = target, artist_real_id = source) %>%
+  left_join(nodes_tbl, by = c("artist_real_id" = "id")) %>%
+  filter(`Node Type` == "Person") %>%
+  distinct(artist_real_id, name) %>%
+  mutate(artist_label = name,
+         artist_id = paste0("artist_", row_number()),
+         group = "person")
+
+# Step 3: Build node list
+# Central node: Oceanus Folk
+center_node <- tibble(
+  id = "Oceanus Folk",
+  label = "Oceanus Folk",
+  group = "center"
+)
+
+# Work nodes
+work_nodes <- influential_works %>%
+  select(id = work_id, label = work_label, group)
+
+# Artist nodes
+artist_nodes <- influencing_artists %>%
+  select(id = artist_id, label = artist_label, group)
+
+nodes_viz <- bind_rows(center_node, work_nodes, artist_nodes)
+
+# Step 4: Create edges
+# Works → Oceanus Folk
+edges_to_of <- influential_works %>%
+  transmute(from = work_id, to = "Oceanus Folk")
+
+# Artists → Works
+edges_artist_to_work <- edges_tbl %>%
+  filter(`Edge Type` == "PerformerOf", target %in% influential_works$id) %>%
+  rename(work_real_id = target, artist_real_id = source) %>%
+  left_join(influential_works, by = c("work_real_id" = "id")) %>%
+  left_join(influencing_artists, by = c("artist_real_id")) %>%
+  transmute(from = artist_id, to = work_id) %>%
+  filter(!is.na(from), !is.na(to))
+
+edges_viz <- bind_rows(edges_artist_to_work, edges_to_of)
+
+# Step 5: Visualize
+visNetwork(nodes_viz, edges_viz, height = "700px", width = "100%") %>%
+  visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE) %>%
+  visLayout(randomSeed = 999) %>%
+  visNodes(shape = "dot", size = 15) %>%
+  visGroups(groupname = "center", color = "tomato") %>%
+  visGroups(groupname = "song", color = "lightblue") %>%
+  visGroups(groupname = "album", color = "khaki") %>%
+  visGroups(groupname = "person", color = "orchid") %>%
+  visLegend()
+```
+
