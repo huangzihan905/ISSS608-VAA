@@ -917,13 +917,13 @@ Oceanus Folk, a genre rooted in emotive storytelling and maritime nostalgia, has
 
 The first section of the dashboard focuses on **Oceanus Folk's influence on others**. A line graph tracks the **number of influenced songs released over time**, revealing a pronounced spike around 2010—signaling a cultural resurgence or a defining moment for the genre. The accompanying data table showcases detailed metadata of influenced works, including song title, artists, genre, and key markers such as whether the track became a single or notable release. This segment combines historical and relational insight, encouraging users to explore not just the trends but also the people behind them.
 
-![](images/Screenshot 2025-06-14 at 12.16.53 AM.png)
+![](images/Screenshot%202025-06-14%20at%2012.16.53%20AM.png)
 
 ### Mapping Influences Into Oceanus Folk: A Genre Melting Pot
 
 The second section flips the lens to investigate how **other genres have shaped Oceanus Folk**. A genre-to-genre **influence network diagram** places Oceanus Folk at the center of a web of arrows, connecting it with genres like Speed Metal, Dream Pop, and Americana. The visual suggests a diverse heritage and indicates stylistic blending that may have influenced Oceanus Folk’s evolution. Below that, a larger **artist-work network** diagram links songs and albums, distinguishing between types of musical output and highlighting central nodes with high connectivity. These visuals paint a picture of Oceanus Folk as both a cultural contributor and a genre in flux—constantly being reshaped by the music landscape around it.
 
-![](images/Screenshot 2025-06-14 at 12.39.02 AM.png)
+![](images/Screenshot%202025-06-14%20at%2012.39.02%20AM.png)
 
 ### **Conclusion**
 
