@@ -55,6 +55,8 @@ website:
         menu: 
           - text: "MC1"
             href: "VAST Challenge 2025/MC1/MC1.html"
+          - text: "MC1 prototype"
+            href: "Take-home_Ex/Take-home_Ex03/Take-home_Ex03_Prototype.html"
     right: 
       - href: index.qmd
         text: Home
